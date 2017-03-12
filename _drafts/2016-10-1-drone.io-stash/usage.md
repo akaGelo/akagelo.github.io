@@ -28,6 +28,6 @@ http://downloads.drone.io/release/linux/amd64/drone.tar.gz
 
 --insecure отключает проверку .drone.yml.sig, нам она не нужна. у нас свои контейнеры
 
-drone secret add  --skip-verify --insecure  octocat/hello-world SLACK_TOKEN f1d2d2f924e986a
+drone secret add   --image akagelo/debian-jessie-maven3-java-8 octocat/hello-world SLACK_TOKEN f1d2d2f924e986a
 
 
