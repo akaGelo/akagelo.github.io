@@ -3,12 +3,14 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev --host",
-    "build": "astro build",
+    "dev": "npm run generate-previews && astro dev --host",
+    "build": "npm run generate-previews && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "generate-previews": "node scripts/generate-previews.mjs"
   },
   "dependencies": {
-    "astro": "^5.9.1"
+    "astro": "^5.9.1",
+    "sharp": "^0.34.2"
   }
 }

@@ -1,5 +1,6 @@
 ---
 import { albums } from '../../data/albums.js';
+import OptimizedImage from '../../components/OptimizedImage.astro';
 
 export async function getStaticPaths() {
 
@@ -43,7 +44,10 @@ const { album } = Astro.props;
         <div class="gallery-grid">
           {album.photos.map((photo, index) => (
             <div class="photo-item" data-photo-id={photo.id} onclick={`openLightbox(${index})`}>
-              <img src={photo.src} alt={photo.alt} loading="lazy" />
+              <OptimizedImage 
+                src={photo.src}
+                loading="lazy"
+              />
             </div>
           ))}
         </div>
@@ -187,7 +191,7 @@ const { album } = Astro.props;
         setTimeout(layoutMasonry, 100);
         
         // Повторяем после загрузки изображений для точности
-        const images = document.querySelectorAll('.photo-item img');
+        const images = document.querySelectorAll('.photo-item .optimized-image img');
         if (images.length > 0) {
           let loadedImages = 0;
 
@@ -386,7 +390,7 @@ const { album } = Astro.props;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
-  .photo-item img {
+  .photo-item .optimized-image {
     width: 100%;
     height: auto;
     display: block;

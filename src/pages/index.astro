@@ -1,5 +1,6 @@
 ---
 import { albums } from '../data/albums.js';
+import OptimizedImage from '../components/OptimizedImage.astro';
 
 // Best photos for slider
 const heroSlides = [
@@ -102,7 +103,12 @@ const photographer = {
 					{albums.map((album) => (
 						<div class="album-card">
 							<a href={`/albums/${album.id}`}>
-								<img src={album.cover} alt={album.title} loading="lazy" />
+								<OptimizedImage 
+									src={album.cover}
+									class="square"
+									useSquareThumbnail={true}
+									loading="lazy"
+								/>
 								<div class="album-overlay">
 									<div class="album-title">{album.title}</div>
 									<div class="album-count">{album.count} photos</div>
@@ -229,7 +235,7 @@ const photographer = {
 				setTimeout(layoutMasonry, 100);
 				
 				// Повторяем после загрузки изображений для точности
-				const images = document.querySelectorAll('.album-card img') as NodeListOf<HTMLImageElement>;
+				const images = document.querySelectorAll('.album-card .optimized-image img') as NodeListOf<HTMLImageElement>;
 				if (images.length > 0) {
 					let loadedImages = 0;
 					
@@ -597,10 +603,9 @@ const photographer = {
 		display: block;
 	}
 
-	.album-card img {
+	.album-card .optimized-image {
 		width: 100%;
-		height: auto;
-		display: block;
+		aspect-ratio: 1;
 		transition: transform 0.3s;
 	}
 
