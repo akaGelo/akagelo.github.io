@@ -1,45 +1,7 @@
 ---
+import { albums } from '../../data/albums.js';
+
 export async function getStaticPaths() {
-  const albums = [
-    {
-      id: 'nature',
-      title: 'Nature',
-      description: 'Landscapes and wildlife',
-      story: 'These photos were taken during my weekend trip to the Carpathian Mountains. The early morning mist and golden hour light created perfect conditions for capturing the raw beauty of untouched nature. Each shot tells a story of serenity and the power of natural landscapes.',
-      photos: [
-        { id: 1, src: '/images/albums/nature/photo1.jpg', alt: 'Mountain lake' },
-        { id: 2, src: '/images/albums/nature/photo2.jpg', alt: 'Forest road' },
-        { id: 3, src: '/images/albums/nature/photo3.jpg', alt: 'Misty mountains' },
-        { id: 4, src: '/images/albums/nature/photo4.jpg', alt: 'Green fields' },
-        { id: 5, src: '/images/albums/nature/photo5.jpg', alt: 'Forest waterfall' }
-      ]
-    },
-    {
-      id: 'street',
-      title: 'Street Photography',
-      description: 'Urban moments',
-      photos: [
-        { id: 1, src: '/images/albums/street/photo1.jpg', alt: 'City buildings' },
-        { id: 2, src: '/images/albums/street/photo2.jpg', alt: 'Empty street at night' },
-        { id: 3, src: '/images/albums/street/photo3.jpg', alt: 'People near buildings' },
-        { id: 4, src: '/images/albums/street/photo4.jpg', alt: 'Narrow alley' },
-        { id: 5, src: '/images/albums/street/photo5.jpg', alt: 'Urban cyclist' }
-      ]
-    },
-    {
-      id: 'portraits',
-      title: 'Portraits',
-      description: 'People and emotions',
-      story: 'A collection of spontaneous portraits captured during various photography sessions. These images focus on genuine emotions and natural expressions, showing the unique character of each person. Shot with available light to maintain authenticity.',
-      photos: [
-        { id: 1, src: '/images/albums/portraits/photo1.jpg', alt: 'Male portrait' },
-        { id: 2, src: '/images/albums/portraits/photo2.jpg', alt: 'Woman by wall' },
-        { id: 3, src: '/images/albums/portraits/photo3.jpg', alt: 'Man in white shirt' },
-        { id: 4, src: '/images/albums/portraits/photo4.jpg', alt: 'Smiling woman' },
-        { id: 5, src: '/images/albums/portraits/photo5.jpg', alt: 'Black and white portrait' }
-      ]
-    }
-  ];
 
   return albums.map((album) => ({
     params: { album: album.id },
@@ -49,13 +11,6 @@ export async function getStaticPaths() {
 
 const { album } = Astro.props;
 
-const photographer = {
-  email: "your.email@example.com",
-  social: {
-    instagram: "@your_instagram",
-    telegram: "@your_telegram"
-  }
-};
 ---
 
 <html lang="en">
@@ -64,7 +19,7 @@ const photographer = {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{album.title} | Vyukov Oleg</title>
+    <title>{album.title} | Example Photographer</title>
   </head>
   <body>
     <main>
