@@ -28,7 +28,7 @@ const baseName = imageName.replace(/\.[^/.]+$/, '');
 const placeholderSrc = `/images/optimized/placeholders/${albumName}/${baseName}.jpg`;
 const thumbnailSrc = useSquareThumbnail 
   ? `/images/optimized/thumbnails/${albumName}/${baseName}.webp`
-  : `/images/optimized/${albumName}/${baseName}_medium.webp`;
+  : `/images/optimized/${albumName}/${baseName}_thumbnail.webp`;
 
 // Responsive srcset
 const srcset = `
