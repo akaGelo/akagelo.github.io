@@ -2,103 +2,103 @@
 const albums = [
   {
     id: 'nature',
-    title: 'Природа',
-    description: 'Пейзажи и дикая природа',
+    title: 'Nature',
+    description: 'Landscapes and wildlife',
     cover: '/images/albums/nature/cover.jpg',
     count: 6,
     size: 'large'
   },
   {
     id: 'street',
-    title: 'Уличная фотография',
-    description: 'Городские моменты',
+    title: 'Street Photography',
+    description: 'Urban moments',
     cover: '/images/albums/street/cover.jpg',
     count: 6,
     size: 'medium'
   },
   {
     id: 'portraits',
-    title: 'Портреты',
-    description: 'Люди и эмоции',
+    title: 'Portraits',
+    description: 'People and emotions',
     cover: '/images/albums/portraits/cover.jpg',
     count: 6,
     size: 'small'
   },
   {
     id: 'landscapes',
-    title: 'Пейзажи',
-    description: 'Красота природных ландшафтов',
+    title: 'Landscapes',
+    description: 'Beauty of natural landscapes',
     cover: '/images/albums/nature/photo1.jpg',
     count: 8,
     size: 'wide'
   },
   {
     id: 'architecture',
-    title: 'Архитектура',
-    description: 'Геометрия городских строений',
+    title: 'Architecture',
+    description: 'Geometry of urban structures',
     cover: '/images/albums/street/photo2.jpg',
     count: 12,
     size: 'tall'
   },
   {
     id: 'people',
-    title: 'Люди',
-    description: 'Характеры и эмоции',
+    title: 'People',
+    description: 'Characters and emotions',
     cover: '/images/albums/portraits/photo2.jpg',
     count: 15,
     size: 'medium'
   },
   {
     id: 'sunset',
-    title: 'Закаты',
-    description: 'Магия золотого часа',
+    title: 'Sunsets',
+    description: 'Magic of golden hour',
     cover: '/images/albums/nature/photo3.jpg',
     count: 9,
     size: 'large'
   },
   {
     id: 'urban',
-    title: 'Урбан',
-    description: 'Ритм мегаполиса',
+    title: 'Urban',
+    description: 'Rhythm of metropolis',
     cover: '/images/albums/street/photo4.jpg',
     count: 7,
     size: 'small'
   },
   {
     id: 'studio',
-    title: 'Студийные',
-    description: 'Контролируемый свет',
+    title: 'Studio',
+    description: 'Controlled lighting',
     cover: '/images/albums/portraits/photo4.jpg',
     count: 11,
     size: 'wide'
   },
   {
     id: 'seasons',
-    title: 'Времена года',
-    description: 'Природа в движении',
+    title: 'Seasons',
+    description: 'Nature in motion',
     cover: '/images/albums/nature/photo5.jpg',
     count: 20,
     size: 'tall'
   },
   {
     id: 'street-life',
-    title: 'Жизнь улиц',
-    description: 'Случайные моменты',
+    title: 'Street Life',
+    description: 'Random moments',
     cover: '/images/albums/street/photo5.jpg',
     count: 14,
     size: 'medium'
   },
   {
     id: 'black-white',
-    title: 'Ч/Б портреты',
-    description: 'Классика без цвета',
+    title: 'B&W Portraits',
+    description: 'Classic without color',
     cover: '/images/albums/portraits/photo5.jpg',
     count: 6,
     size: 'small'
   }
 ];
 
-// Лучшие фотографии для слайдера
+// Best photos for slider
 const heroSlides = [
   '/images/albums/nature/photo1.jpg',
   '/images/albums/street/photo1.jpg',
@@ -116,13 +116,13 @@ const photographer = {
 };
 ---
 
-<html lang="ru">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Vyukov Oleg | Мои работы</title>
+		<title>Vyukov Oleg | Photography</title>
 	</head>
 	  <body>
     <div class="layout">
@@ -133,8 +133,8 @@ const photographer = {
               <img src="/images/author.jpg" alt="Vyukov Oleg" />
             </div>
             <h1>Vyukov Oleg</h1>
-            <h2>Фотограф-любитель</h2>
-            <p>Бэкенд разработчик по профессии, фотография - мое увлечение. Больше всего привлекают пейзажи и уличная фотография.</p>
+            <h2>Hobby Photographer</h2>
+            <p>Backend developer by profession, photography is my passion. I'm mostly drawn to landscapes and street photography.</p>
           </div>
           
           <div class="sidebar-contacts">
@@ -163,7 +163,7 @@ const photographer = {
 				<div class="slider-container">
 					{heroSlides.map((slide, index) => (
 						<div class={`slide ${index === 0 ? 'active' : ''}`}>
-							<img src={slide} alt="Фотография" />
+							<img src={slide} alt="Photography" />
 						</div>
 					))}
 				</div>
@@ -189,7 +189,7 @@ const photographer = {
 							<path d="M7 6l3 3 3-3"></path>
 						</svg>
 					</div>
-					<span>Альбомы</span>
+					<span>Albums</span>
 				</div>
 			</section>
 
@@ -202,7 +202,7 @@ const photographer = {
 								<img src={album.cover} alt={album.title} loading="lazy" />
 								<div class="album-overlay">
 									<div class="album-title">{album.title}</div>
-									<div class="album-count">{album.count} фото</div>
+									<div class="album-count">{album.count} photos</div>
 								</div>
 							</a>
 						</div>
@@ -248,7 +248,7 @@ const photographer = {
 				changeSlide(1);
 			}, 5000);
 
-			// Функция скролла к альбомам
+			      // Function to scroll to albums
 			function scrollToAlbums() {
 				const albumsSection = document.querySelector('.albums');
 				if (albumsSection) {

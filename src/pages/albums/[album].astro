@@ -3,38 +3,40 @@ export async function getStaticPaths() {
   const albums = [
     {
       id: 'nature',
-      title: 'Природа',
-      description: 'Пейзажи и дикая природа',
+      title: 'Nature',
+      description: 'Landscapes and wildlife',
+      story: 'These photos were taken during my weekend trip to the Carpathian Mountains. The early morning mist and golden hour light created perfect conditions for capturing the raw beauty of untouched nature. Each shot tells a story of serenity and the power of natural landscapes.',
       photos: [
-        { id: 1, src: '/images/albums/nature/photo1.jpg', alt: 'Озеро в горах' },
-        { id: 2, src: '/images/albums/nature/photo2.jpg', alt: 'Лесная дорога' },
-        { id: 3, src: '/images/albums/nature/photo3.jpg', alt: 'Туманные горы' },
-        { id: 4, src: '/images/albums/nature/photo4.jpg', alt: 'Зеленые поля' },
-        { id: 5, src: '/images/albums/nature/photo5.jpg', alt: 'Водопад в лесу' }
+        { id: 1, src: '/images/albums/nature/photo1.jpg', alt: 'Mountain lake' },
+        { id: 2, src: '/images/albums/nature/photo2.jpg', alt: 'Forest road' },
+        { id: 3, src: '/images/albums/nature/photo3.jpg', alt: 'Misty mountains' },
+        { id: 4, src: '/images/albums/nature/photo4.jpg', alt: 'Green fields' },
+        { id: 5, src: '/images/albums/nature/photo5.jpg', alt: 'Forest waterfall' }
       ]
     },
     {
       id: 'street',
-      title: 'Уличная фотография',
-      description: 'Городские моменты',
+      title: 'Street Photography',
+      description: 'Urban moments',
       photos: [
-        { id: 1, src: '/images/albums/street/photo1.jpg', alt: 'Городские здания' },
-        { id: 2, src: '/images/albums/street/photo2.jpg', alt: 'Пустая улица ночью' },
-        { id: 3, src: '/images/albums/street/photo3.jpg', alt: 'Люди у зданий' },
-        { id: 4, src: '/images/albums/street/photo4.jpg', alt: 'Узкая улочка' },
-        { id: 5, src: '/images/albums/street/photo5.jpg', alt: 'Городской велосипедист' }
+        { id: 1, src: '/images/albums/street/photo1.jpg', alt: 'City buildings' },
+        { id: 2, src: '/images/albums/street/photo2.jpg', alt: 'Empty street at night' },
+        { id: 3, src: '/images/albums/street/photo3.jpg', alt: 'People near buildings' },
+        { id: 4, src: '/images/albums/street/photo4.jpg', alt: 'Narrow alley' },
+        { id: 5, src: '/images/albums/street/photo5.jpg', alt: 'Urban cyclist' }
       ]
     },
     {
       id: 'portraits',
-      title: 'Портреты',
-      description: 'Люди и эмоции',
+      title: 'Portraits',
+      description: 'People and emotions',
+      story: 'A collection of spontaneous portraits captured during various photography sessions. These images focus on genuine emotions and natural expressions, showing the unique character of each person. Shot with available light to maintain authenticity.',
       photos: [
-        { id: 1, src: '/images/albums/portraits/photo1.jpg', alt: 'Мужской портрет' },
-        { id: 2, src: '/images/albums/portraits/photo2.jpg', alt: 'Женщина у стены' },
-        { id: 3, src: '/images/albums/portraits/photo3.jpg', alt: 'Мужчина в белой рубашке' },
-        { id: 4, src: '/images/albums/portraits/photo4.jpg', alt: 'Улыбающаяся женщина' },
-        { id: 5, src: '/images/albums/portraits/photo5.jpg', alt: 'Черно-белый портрет' }
+        { id: 1, src: '/images/albums/portraits/photo1.jpg', alt: 'Male portrait' },
+        { id: 2, src: '/images/albums/portraits/photo2.jpg', alt: 'Woman by wall' },
+        { id: 3, src: '/images/albums/portraits/photo3.jpg', alt: 'Man in white shirt' },
+        { id: 4, src: '/images/albums/portraits/photo4.jpg', alt: 'Smiling woman' },
+        { id: 5, src: '/images/albums/portraits/photo5.jpg', alt: 'Black and white portrait' }
       ]
     }
   ];
@@ -56,7 +58,7 @@ const photographer = {
 };
 ---
 
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -75,6 +77,12 @@ const photographer = {
         </a>
         <h1>{album.title}</h1>
       </section>
+
+      {album.story && (
+        <section class="album-story">
+          <p>{album.story}</p>
+        </section>
+      )}
 
       <section class="photo-gallery">
         <div class="gallery-grid">
@@ -102,7 +110,7 @@ const photographer = {
     <script define:vars={{ photos: album.photos }}>
       let currentPhotoIndex = 0;
 
-      // Делаем функции глобальными
+      // Make functions global
       window.openLightbox = function(index) {
         currentPhotoIndex = index;
         showPhoto(currentPhotoIndex);
@@ -136,14 +144,14 @@ const photographer = {
         document.body.style.overflow = 'auto';
       }
 
-      // Закрытие по клику вне изображения
+      // Close by clicking outside image
       document.getElementById('lightbox').addEventListener('click', function(e) {
         if (e.target === this) {
           closeLightbox();
         }
       });
 
-      // Навигация клавишами
+      // Keyboard navigation
       document.addEventListener('keydown', function(e) {
         const lightbox = document.getElementById('lightbox');
         if (lightbox.style.display === 'flex') {
@@ -165,7 +173,7 @@ const photographer = {
         const cards = Array.from(grid.children);
         if (cards.length === 0) return;
 
-        // Определяем количество колонок в зависимости от ширины
+        // Determine column count based on width
         const containerWidth = grid.offsetWidth;
         let columnCount = 4;
         
@@ -175,38 +183,38 @@ const photographer = {
         else if (containerWidth >= 480) columnCount = 2;
         else columnCount = 1;
 
-        // Вычисляем ширину колонки
+        // Calculate column width
         const gap = 20;
         const columnWidth = (containerWidth - (gap * (columnCount - 1))) / columnCount;
         
-        // Инициализируем массив высот колонок
+        // Initialize column heights array
         const columnHeights = new Array(columnCount).fill(0);
 
-        // Размещаем каждую карточку
+        // Place each card
         cards.forEach((card, index) => {
-          // Находим самую короткую колонку
+          // Find shortest column
           const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
           
-          // Вычисляем позицию
+          // Calculate position
           const x = shortestColumnIndex * (columnWidth + gap);
           const y = columnHeights[shortestColumnIndex];
           
-          // Устанавливаем размер и позицию
+          // Set size and position
           card.style.position = 'absolute';
           card.style.left = x + 'px';
           card.style.top = y + 'px';
           card.style.width = columnWidth + 'px';
           
-          // Обновляем высоту колонки
+          // Update column height
           columnHeights[shortestColumnIndex] += card.offsetHeight + gap;
         });
 
-        // Устанавливаем высоту контейнера
+        // Set container height
         const maxHeight = Math.max(...columnHeights);
         grid.style.height = (maxHeight - gap) + 'px';
       }
 
-      // Инициализация masonry
+      // Initialize masonry
       function initMasonry() {
         const images = document.querySelectorAll('.photo-item img');
         let loadedImages = 0;
@@ -232,7 +240,7 @@ const photographer = {
           }
         });
 
-        // Перестраиваем при изменении размера окна
+        // Rebuild on window resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
@@ -240,7 +248,7 @@ const photographer = {
         });
       }
 
-      // Инициализация после загрузки DOM
+      // Initialize after DOM load
       document.addEventListener('DOMContentLoaded', initMasonry);
     </script>
   </body>
@@ -303,6 +311,23 @@ const photographer = {
     margin: 0;
   }
 
+  .album-story {
+    max-width: 700px;
+    margin: 0 auto 4rem auto;
+    padding: 0 2rem;
+  }
+
+  .album-story p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+    text-align: left;
+    font-style: italic;
+    border-left: 3px solid #e2e8f0;
+    padding-left: 1.5rem;
+  }
+
   /* Мобильные стили */
   @media (max-width: 768px) {
     .album-header h1 {
@@ -317,6 +342,17 @@ const photographer = {
     .back-link svg {
       width: 20px;
       height: 20px;
+    }
+
+    .album-story {
+      margin: 0 1rem 3rem 1rem;
+      padding: 0 1rem;
+    }
+
+    .album-story p {
+      font-size: 0.95rem;
+      padding-left: 1rem;
+      border-left-width: 2px;
     }
   }
 
