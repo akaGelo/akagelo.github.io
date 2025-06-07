@@ -65,34 +65,17 @@ const photographer = {
     <title>{album.title} | Vyukov Oleg</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <h1><a href="/">Vyukov Oleg</a></h1>
-        <ul>
-          <li><a href="/">Галерея</a></li>
-          <li><a href="/about">Обо мне</a></li>
-        </ul>
-      </nav>
-    </header>
-
     <main>
       <section class="album-header">
-        <a href="/" class="back-link">← Назад к галерее</a>
+        <a href="/#albums" class="back-link">← Назад к галерее</a>
         <h1>{album.title}</h1>
-        <p>{album.description}</p>
-        <span class="photo-count">{album.photos.length} фотографий</span>
       </section>
 
       <section class="photo-gallery">
         <div class="gallery-grid">
-          {album.photos.map((photo) => (
-            <div class="photo-item" data-photo-id={photo.id}>
+          {album.photos.map((photo, index) => (
+            <div class="photo-item" data-photo-id={photo.id} onclick={`openLightbox(${index})`}>
               <img src={photo.src} alt={photo.alt} loading="lazy" />
-              <div class="photo-overlay">
-                <button class="view-full" onclick={`openLightbox('${photo.src}', '${photo.alt}')`}>
-                  Открыть
-                </button>
-              </div>
             </div>
           ))}
         </div>
@@ -103,10 +86,9 @@ const photographer = {
     <div id="lightbox" class="lightbox">
       <div class="lightbox-content">
         <span class="close" onclick="closeLightbox()">&times;</span>
-        <img id="lightbox-image" src="" alt="" />
-        <div class="lightbox-caption">
-          <p id="lightbox-caption-text"></p>
-        </div>
+        <button class="nav-button prev" onclick="previousPhoto()">‹</button>
+        <img id="lightbox-image" src="" alt="" onclick="nextPhoto()" />
+        <button class="nav-button next" onclick="nextPhoto()">›</button>
       </div>
     </div>
 
@@ -130,20 +112,38 @@ const photographer = {
       </div>
     </footer>
 
-    <script>
-      function openLightbox(src, alt) {
-        const lightbox = document.getElementById('lightbox');
-        const image = document.getElementById('lightbox-image');
-        const caption = document.getElementById('lightbox-caption-text');
+    <script define:vars={{ photos: album.photos }}>
+      let currentPhotoIndex = 0;
+
+      // Делаем функции глобальными
+      window.openLightbox = function(index) {
+        currentPhotoIndex = index;
+        showPhoto(currentPhotoIndex);
         
-        image.src = src;
-        image.alt = alt;
-        caption.textContent = alt;
+        const lightbox = document.getElementById('lightbox');
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       }
 
-      function closeLightbox() {
+      function showPhoto(index) {
+        const photo = photos[index];
+        const image = document.getElementById('lightbox-image');
+        
+        image.src = photo.src;
+        image.alt = photo.alt;
+      }
+
+      window.nextPhoto = function() {
+        currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+        showPhoto(currentPhotoIndex);
+      }
+
+      window.previousPhoto = function() {
+        currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+        showPhoto(currentPhotoIndex);
+      }
+
+      window.closeLightbox = function() {
         const lightbox = document.getElementById('lightbox');
         lightbox.style.display = 'none';
         document.body.style.overflow = 'auto';
@@ -156,12 +156,105 @@ const photographer = {
         }
       });
 
-      // Закрытие по Escape
+      // Навигация клавишами
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          closeLightbox();
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox.style.display === 'flex') {
+          if (e.key === 'Escape') {
+            closeLightbox();
+          } else if (e.key === 'ArrowRight') {
+            nextPhoto();
+          } else if (e.key === 'ArrowLeft') {
+            previousPhoto();
+          }
         }
       });
+
+      // Masonry layout
+      function layoutMasonry() {
+        const grid = document.querySelector('.gallery-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.children);
+        if (cards.length === 0) return;
+
+        // Определяем количество колонок в зависимости от ширины
+        const containerWidth = grid.offsetWidth;
+        let columnCount = 4;
+        
+        if (containerWidth >= 1200) columnCount = 5;
+        else if (containerWidth >= 900) columnCount = 4;
+        else if (containerWidth >= 600) columnCount = 3;
+        else if (containerWidth >= 480) columnCount = 2;
+        else columnCount = 1;
+
+        // Вычисляем ширину колонки
+        const gap = 20;
+        const columnWidth = (containerWidth - (gap * (columnCount - 1))) / columnCount;
+        
+        // Инициализируем массив высот колонок
+        const columnHeights = new Array(columnCount).fill(0);
+
+        // Размещаем каждую карточку
+        cards.forEach((card, index) => {
+          // Находим самую короткую колонку
+          const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
+          
+          // Вычисляем позицию
+          const x = shortestColumnIndex * (columnWidth + gap);
+          const y = columnHeights[shortestColumnIndex];
+          
+          // Устанавливаем размер и позицию
+          card.style.position = 'absolute';
+          card.style.left = x + 'px';
+          card.style.top = y + 'px';
+          card.style.width = columnWidth + 'px';
+          
+          // Обновляем высоту колонки
+          columnHeights[shortestColumnIndex] += card.offsetHeight + gap;
+        });
+
+        // Устанавливаем высоту контейнера
+        const maxHeight = Math.max(...columnHeights);
+        grid.style.height = (maxHeight - gap) + 'px';
+      }
+
+      // Инициализация masonry
+      function initMasonry() {
+        const images = document.querySelectorAll('.photo-item img');
+        let loadedImages = 0;
+
+        const checkAllLoaded = () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            setTimeout(layoutMasonry, 100);
+          }
+        };
+
+        if (images.length === 0) {
+          layoutMasonry();
+          return;
+        }
+
+        images.forEach(img => {
+          if (img.complete) {
+            checkAllLoaded();
+          } else {
+            img.addEventListener('load', checkAllLoaded);
+            img.addEventListener('error', checkAllLoaded);
+          }
+        });
+
+        // Перестраиваем при изменении размера окна
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(layoutMasonry, 250);
+        });
+      }
+
+      // Инициализация после загрузки DOM
+      document.addEventListener('DOMContentLoaded', initMasonry);
     </script>
   </body>
 </html>
@@ -180,46 +273,7 @@ const photographer = {
     background: #f8f9fa;
   }
 
-  header {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
 
-  nav {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  nav h1 a {
-    text-decoration: none;
-    color: #333;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  nav ul {
-    display: flex;
-    list-style: none;
-    gap: 2rem;
-  }
-
-  nav a {
-    text-decoration: none;
-    color: #666;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-
-  nav a:hover {
-    color: #333;
-  }
 
   main {
     max-width: 1400px;
@@ -251,76 +305,67 @@ const photographer = {
     margin-bottom: 1rem;
   }
 
-  .album-header p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 1rem;
-  }
 
-  .photo-count {
-    color: #888;
-    font-size: 1rem;
-  }
 
   .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    position: relative;
+    padding: 0;
   }
 
   .photo-item {
-    position: relative;
     background: white;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     cursor: pointer;
   }
 
   .photo-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 
   .photo-item img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: auto;
     display: block;
   }
 
-  .photo-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
+  .nav-button {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1003;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s;
+    color: white;
+    backdrop-filter: blur(10px);
+    opacity: 0.8;
   }
 
-  .photo-item:hover .photo-overlay {
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.05);
     opacity: 1;
   }
 
-  .view-full {
-    background: white;
-    color: #333;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
+  .nav-button.prev {
+    left: 30px;
   }
 
-  .view-full:hover {
-    background: #f8f9fa;
+  .nav-button.next {
+    right: 30px;
   }
 
   .lightbox {
@@ -329,49 +374,61 @@ const photographer = {
     z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(128, 128, 128, 0.8);
     align-items: center;
     justify-content: center;
   }
 
   .lightbox-content {
     position: relative;
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 95vw;
+    max-height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .close {
-    position: absolute;
-    top: -40px;
-    right: 0;
+    position: fixed;
+    top: 30px;
+    right: 30px;
     color: white;
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: normal;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1003;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    opacity: 0.8;
   }
 
   .close:hover {
-    opacity: 0.7;
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+    opacity: 1;
   }
 
   #lightbox-image {
-    max-width: 100%;
-    max-height: 80vh;
+    max-width: 90vw;
+    max-height: 85vh;
     border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
   }
 
-  .lightbox-caption {
-    text-align: center;
-    margin-top: 1rem;
-  }
 
-  .lightbox-caption p {
-    color: white;
-    font-size: 1.1rem;
-  }
 
   footer {
     position: fixed;
@@ -412,11 +469,6 @@ const photographer = {
   }
 
   @media (max-width: 768px) {
-    nav {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
     main {
       padding: 1rem;
       padding-bottom: 6rem;
@@ -426,22 +478,40 @@ const photographer = {
       font-size: 2rem;
     }
 
-    .gallery-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
 
-    .photo-item img {
-      height: 250px;
-    }
+
+
 
     .lightbox-content {
-      max-width: 95%;
-      max-height: 95%;
+      max-width: 98vw;
+      max-height: 98vh;
     }
 
     #lightbox-image {
-      max-height: 70vh;
+      max-width: 95vw;
+      max-height: 75vh;
+    }
+
+    .nav-button {
+      width: 45px;
+      height: 45px;
+      font-size: 20px;
+    }
+
+    .nav-button.prev {
+      left: 15px;
+    }
+
+    .nav-button.next {
+      right: 15px;
+    }
+
+    .close {
+      top: 15px;
+      right: 15px;
+      width: 45px;
+      height: 45px;
+      font-size: 1.8rem;
     }
 
     footer {
