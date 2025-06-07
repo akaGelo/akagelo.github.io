@@ -1,4 +1,58 @@
-# Astro Starter Kit: Minimal
+# Фотогалерея
+
+Сайт для демонстрации фотографий, организованных по альбомам.
+
+## Как запустить локально
+
+```bash
+npm install
+npm run dev
+```
+
+Сайт будет доступен по адресу `http://localhost:4321`
+
+## Как добавить фотографии
+
+### Структура папок
+```
+public/images/
+├── albums/
+│   ├── nature/        # Альбом "Природа"
+│   ├── street/        # Альбом "Уличная фотография"  
+│   └── portraits/     # Альбом "Портреты"
+└── author.jpg         # Ваше фото для страницы "Обо мне"
+```
+
+### Добавление нового альбома
+
+1. Создайте папку в `public/images/albums/[название-альбома]/`
+2. Добавьте фотографии в эту папку
+3. Отредактируйте файлы:
+   - `src/pages/index.astro` - добавьте альбом в массив `albums`
+   - `src/pages/albums/[album].astro` - добавьте альбом в функцию `getStaticPaths()`
+
+### Редактирование информации о себе
+
+Отредактируйте объект `photographer` в файле `src/pages/about.astro`
+
+## Деплой на GitHub Pages
+
+1. Измените в `astro.config.mjs`:
+   - `site: 'https://ваш-username.github.io'`
+   - `base: '/photo-site'` (или название вашего репозитория)
+
+2. Загрузите код в репозиторий на GitHub
+
+3. В настройках репозитория включите GitHub Pages:
+   - Settings → Pages → Source: GitHub Actions
+
+4. Сайт будет автоматически собираться и обновляться при каждом push
+
+## Команды
+
+- `npm run dev` - запуск сервера разработки
+- `npm run build` - сборка для продакшена  
+- `npm run preview` - предварительный просмотр собранного сайта
 
 ```sh
 npm create astro@latest -- --template minimal

@@ -1,0 +1,462 @@
+---
+export async function getStaticPaths() {
+  const albums = [
+    {
+      id: 'nature',
+      title: 'Природа',
+      description: 'Пейзажи и дикая природа',
+      photos: [
+        { id: 1, src: '/images/albums/nature/photo1.jpg', alt: 'Озеро в горах' },
+        { id: 2, src: '/images/albums/nature/photo2.jpg', alt: 'Лесная дорога' },
+        { id: 3, src: '/images/albums/nature/photo3.jpg', alt: 'Туманные горы' },
+        { id: 4, src: '/images/albums/nature/photo4.jpg', alt: 'Зеленые поля' },
+        { id: 5, src: '/images/albums/nature/photo5.jpg', alt: 'Водопад в лесу' }
+      ]
+    },
+    {
+      id: 'street',
+      title: 'Уличная фотография',
+      description: 'Городские моменты',
+      photos: [
+        { id: 1, src: '/images/albums/street/photo1.jpg', alt: 'Городские здания' },
+        { id: 2, src: '/images/albums/street/photo2.jpg', alt: 'Пустая улица ночью' },
+        { id: 3, src: '/images/albums/street/photo3.jpg', alt: 'Люди у зданий' },
+        { id: 4, src: '/images/albums/street/photo4.jpg', alt: 'Узкая улочка' },
+        { id: 5, src: '/images/albums/street/photo5.jpg', alt: 'Городской велосипедист' }
+      ]
+    },
+    {
+      id: 'portraits',
+      title: 'Портреты',
+      description: 'Люди и эмоции',
+      photos: [
+        { id: 1, src: '/images/albums/portraits/photo1.jpg', alt: 'Мужской портрет' },
+        { id: 2, src: '/images/albums/portraits/photo2.jpg', alt: 'Женщина у стены' },
+        { id: 3, src: '/images/albums/portraits/photo3.jpg', alt: 'Мужчина в белой рубашке' },
+        { id: 4, src: '/images/albums/portraits/photo4.jpg', alt: 'Улыбающаяся женщина' },
+        { id: 5, src: '/images/albums/portraits/photo5.jpg', alt: 'Черно-белый портрет' }
+      ]
+    }
+  ];
+
+  return albums.map((album) => ({
+    params: { album: album.id },
+    props: { album }
+  }));
+}
+
+const { album } = Astro.props;
+
+const photographer = {
+  email: "your.email@example.com",
+  social: {
+    instagram: "@your_instagram",
+    telegram: "@your_telegram"
+  }
+};
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{album.title} | Vyukov Oleg</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1><a href="/">Vyukov Oleg</a></h1>
+        <ul>
+          <li><a href="/">Галерея</a></li>
+          <li><a href="/about">Обо мне</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="album-header">
+        <a href="/" class="back-link">← Назад к галерее</a>
+        <h1>{album.title}</h1>
+        <p>{album.description}</p>
+        <span class="photo-count">{album.photos.length} фотографий</span>
+      </section>
+
+      <section class="photo-gallery">
+        <div class="gallery-grid">
+          {album.photos.map((photo) => (
+            <div class="photo-item" data-photo-id={photo.id}>
+              <img src={photo.src} alt={photo.alt} loading="lazy" />
+              <div class="photo-overlay">
+                <button class="view-full" onclick={`openLightbox('${photo.src}', '${photo.alt}')`}>
+                  Открыть
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+      <div class="lightbox-content">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-image" src="" alt="" />
+        <div class="lightbox-caption">
+          <p id="lightbox-caption-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="contact-info">
+        <a href={`mailto:${photographer.email}`} title="Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </a>
+        <a href={`https://instagram.com/${photographer.social.instagram.replace('@', '')}`} target="_blank" title="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+        <a href={`https://t.me/${photographer.social.telegram.replace('@', '')}`} target="_blank" title="Telegram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+          </svg>
+        </a>
+      </div>
+    </footer>
+
+    <script>
+      function openLightbox(src, alt) {
+        const lightbox = document.getElementById('lightbox');
+        const image = document.getElementById('lightbox-image');
+        const caption = document.getElementById('lightbox-caption-text');
+        
+        image.src = src;
+        image.alt = alt;
+        caption.textContent = alt;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      // Закрытие по клику вне изображения
+      document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeLightbox();
+        }
+      });
+
+      // Закрытие по Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+  }
+
+  header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  nav h1 a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #333;
+  }
+
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .album-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  .back-link:hover {
+    color: #2980b9;
+  }
+
+  .album-header h1 {
+    font-size: 3rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .album-header p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .photo-count {
+    color: #888;
+    font-size: 1rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .photo-item {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .photo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+
+  .photo-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .photo-item:hover .photo-overlay {
+    opacity: 1;
+  }
+
+  .view-full {
+    background: white;
+    color: #333;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .view-full:hover {
+    background: #f8f9fa;
+  }
+
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+  }
+
+  .close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .close:hover {
+    opacity: 0.7;
+  }
+
+  #lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 8px;
+  }
+
+  .lightbox-caption {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .lightbox-caption p {
+    color: white;
+    font-size: 1.1rem;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    z-index: 50;
+  }
+
+  .contact-info {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .contact-info a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(44, 62, 80, 0.1);
+    color: #2c3e50;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .contact-info a:hover {
+    background: #2c3e50;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    main {
+      padding: 1rem;
+      padding-bottom: 6rem;
+    }
+
+    .album-header h1 {
+      font-size: 2rem;
+    }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .photo-item img {
+      height: 250px;
+    }
+
+    .lightbox-content {
+      max-width: 95%;
+      max-height: 95%;
+    }
+
+    #lightbox-image {
+      max-height: 70vh;
+    }
+
+    footer {
+      bottom: 1rem;
+      right: 1rem;
+      padding: 0.8rem;
+    }
+
+    .contact-info a {
+      width: 36px;
+      height: 36px;
+    }
+
+    .contact-info {
+      gap: 0.6rem;
+    }
+  }
+</style> 

@@ -1,0 +1,264 @@
+---
+const photographer = {
+  name: "Ваше Имя",
+  title: "Фотограф-любитель",
+  bio: "Я бэкенд разработчик по профессии, а фотография - мое увлечение. Начал заниматься фотографией несколько лет назад и с тех пор не могу остановиться. Больше всего меня привлекают пейзажи и уличная фотография.",
+  email: "your.email@example.com",
+  social: {
+    instagram: "@your_instagram",
+    telegram: "@your_telegram"
+  }
+};
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Обо мне | Vyukov Oleg</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <h1><a href="/">Vyukov Oleg</a></h1>
+        <ul>
+          <li><a href="/">Галерея</a></li>
+          <li><a href="/about">Обо мне</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="about-hero">
+        <div class="about-content">
+          <div class="photo-container">
+            <img src="/images/author.jpg" alt={photographer.name} />
+          </div>
+          <div class="info">
+            <h1>{photographer.name}</h1>
+            <h2>{photographer.title}</h2>
+            <p class="bio">{photographer.bio}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact">
+        <h3>Связаться со мной</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="label">Email:</span>
+            <a href={`mailto:${photographer.email}`}>{photographer.email}</a>
+          </div>
+          <div class="contact-item">
+            <span class="label">Instagram:</span>
+            <a href={`https://instagram.com/${photographer.social.instagram.replace('@', '')}`} target="_blank">{photographer.social.instagram}</a>
+          </div>
+          <div class="contact-item">
+            <span class="label">Telegram:</span>
+            <a href={`https://t.me/${photographer.social.telegram.replace('@', '')}`} target="_blank">{photographer.social.telegram}</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+  }
+
+  header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  nav h1 a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  nav a:hover {
+    color: #333;
+  }
+
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .about-hero {
+    background: white;
+    border-radius: 12px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .photo-container {
+    position: relative;
+  }
+
+  .photo-container img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+
+  .info h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .info h2 {
+    font-size: 1.3rem;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  .bio {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+  }
+
+
+
+  .contact {
+    background: white;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  .contact h3 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .contact-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .label {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .contact-item a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .contact-item a:hover {
+    color: #2980b9;
+  }
+
+
+
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    main {
+      padding: 1rem;
+    }
+
+    .about-hero {
+      padding: 2rem 1.5rem;
+    }
+
+    .about-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .photo-container {
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .info h1 {
+      font-size: 2rem;
+    }
+
+
+
+    .contact {
+      padding: 2rem 1.5rem;
+    }
+
+
+  }
+</style> 
