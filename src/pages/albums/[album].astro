@@ -16,7 +16,7 @@ const { album } = Astro.props;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicn.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{album.title} | Example Photographer</title>
@@ -120,13 +120,20 @@ const { album } = Astro.props;
         }
       });
 
-      // Masonry layout
+      // Masonry layout (активируется только после загрузки всех изображений)
       function layoutMasonry() {
         const grid = document.querySelector('.gallery-grid');
         if (!grid) return;
 
         const cards = Array.from(grid.children);
         if (cards.length === 0) return;
+
+        // Плавно скрываем для переключения
+        grid.style.opacity = '0.7';
+        
+        setTimeout(() => {
+          // Переключаемся на masonry только после полной загрузки
+          grid.style.display = 'block';
 
         // Determine column count based on width
         const containerWidth = grid.offsetWidth;
@@ -167,9 +174,15 @@ const { album } = Astro.props;
         // Set container height
         const maxHeight = Math.max(...columnHeights);
         grid.style.height = (maxHeight - gap) + 'px';
+        
+        // Плавно показываем результат
+        setTimeout(() => {
+          grid.style.opacity = '1';
+        }, 50);
+      }, 300);
       }
 
-      // Initialize masonry
+      // Initialize masonry (запускается после загрузки всех изображений)
       function initMasonry() {
         const images = document.querySelectorAll('.photo-item img');
         let loadedImages = 0;
@@ -177,12 +190,11 @@ const { album } = Astro.props;
         const checkAllLoaded = () => {
           loadedImages++;
           if (loadedImages === images.length) {
-            setTimeout(layoutMasonry, 100);
+            setTimeout(layoutMasonry, 800);
           }
         };
 
         if (images.length === 0) {
-          layoutMasonry();
           return;
         }
 
@@ -195,11 +207,16 @@ const { album } = Astro.props;
           }
         });
 
-        // Rebuild on window resize
+        // Rebuild on window resize (только если masonry активен)
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(layoutMasonry, 250);
+          resizeTimeout = setTimeout(() => {
+            const grid = document.querySelector('.gallery-grid');
+            if (grid && grid.style.display === 'block') {
+              layoutMasonry();
+            }
+          }, 250);
         });
       }
 
@@ -316,6 +333,41 @@ const { album } = Astro.props;
   .gallery-grid {
     position: relative;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    transition: all 0.6s ease, opacity 0.4s ease;
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: 600px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 601px) and (max-width: 900px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 901px) and (max-width: 1200px) {
+    .gallery-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 1201px) {
+    .gallery-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
   }
 
   .photo-item {
@@ -323,8 +375,9 @@ const { album } = Astro.props;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
+    position: relative;
   }
 
   .photo-item:hover {
