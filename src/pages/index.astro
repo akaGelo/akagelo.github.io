@@ -689,98 +689,71 @@ const photographer = {
 
 
 
-	@media (max-width: 768px) {
+	@media (max-width: 1200px) {
+		body {
+			height: auto !important;
+			overflow: visible !important;
+		}
+
+		.layout {
+			flex-direction: column;
+			height: auto;
+		}
+
 		.sidebar {
-			width: 240px;
+			width: 100% !important;
+			height: auto !important;
+			position: relative !important;
+			border-right: none;
+			border-bottom: 1px solid #dbdbdb;
+			display: block !important;
 		}
 
 		.content {
-			margin-left: 240px;
-			width: calc(100% - 240px);
+			margin-left: 0;
+			width: 100%;
+			height: auto !important;
+			overflow: visible !important;
+			overflow-y: scroll !important;
 		}
 
 		.sidebar-content {
-			padding: 24px 16px 16px;
+			padding: 16px;
+			display: flex;
+			align-items: center;
+			gap: 16px;
 		}
 
-		.about-info h1 {
-			font-size: 18px;
-		}
-
-		.avatar {
-			width: 60px;
-			height: 60px;
-			margin-bottom: 16px;
-		}
-
-		.about-info h2 {
-			font-size: 14px;
-		}
-
-		.about-info p {
-			font-size: 12px;
-		}
-
-		.sidebar-contacts a {
-			width: 32px;
-			height: 32px;
-		}
-
-		.sidebar-contacts {
-			gap: 12px;
-		}
-
-		.nav-btn {
-			width: 32px;
-			height: 32px;
-			font-size: 12px;
-		}
-
-		.slider-nav {
-			padding: 0 16px;
-		}
-
-		.albums {
-			padding: 24px 16px;
-		}
-
-
-
-		.album-card {
-			margin-bottom: 12px;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.sidebar {
-			width: 200px;
-		}
-
-		.content {
-			margin-left: 200px;
-			width: calc(100% - 200px);
-		}
-
-		.sidebar-content {
-			padding: 20px 12px 12px;
+		.about-info {
+			flex: 1;
+			text-align: left;
 		}
 
 		.about-info h1 {
 			font-size: 16px;
+			margin-bottom: 8px;
 		}
 
 		.avatar {
 			width: 50px;
 			height: 50px;
-			margin-bottom: 12px;
+			margin-bottom: 0;
+			flex-shrink: 0;
 		}
 
 		.about-info h2 {
-			font-size: 13px;
+			font-size: 12px;
+			margin-bottom: 4px;
 		}
 
 		.about-info p {
-			font-size: 11px;
+			font-size: 10px;
+			line-height: 1.3;
+		}
+
+		.sidebar-contacts {
+			flex-shrink: 0;
+			gap: 8px;
 		}
 
 		.sidebar-contacts a {
@@ -788,11 +761,67 @@ const photographer = {
 			height: 28px;
 		}
 
-		.albums {
-			padding: 20px 12px;
+		.hero-slider,
+		.slider,
+		.slider-container,
+		.slider-nav,
+		.slider-dots,
+		.scroll-indicator {
+			display: none !important;
 		}
 
 
+
+		.albums {
+			padding: 24px 16px;
+		}
+
+		.album-card {
+			margin-bottom: 12px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.sidebar-content {
+			padding: 12px;
+			gap: 12px;
+		}
+
+		.about-info h1 {
+			font-size: 14px;
+			margin-bottom: 6px;
+		}
+
+		.avatar {
+			width: 40px;
+			height: 40px;
+		}
+
+		.about-info h2 {
+			font-size: 11px;
+			margin-bottom: 2px;
+		}
+
+		.about-info p {
+			font-size: 9px;
+		}
+
+		.sidebar-contacts a {
+			width: 24px;
+			height: 24px;
+		}
+
+		.sidebar-contacts {
+			gap: 6px;
+		}
+
+
+
+
+
+		.albums {
+			padding: 16px 12px;
+		}
 
 		.album-card {
 			margin-bottom: 16px;
