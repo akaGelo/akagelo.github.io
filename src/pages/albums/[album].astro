@@ -128,12 +128,8 @@ const { album } = Astro.props;
         const cards = Array.from(grid.children);
         if (cards.length === 0) return;
 
-        // Плавно скрываем для переключения
-        grid.style.opacity = '0.7';
-        
-        setTimeout(() => {
-          // Переключаемся на masonry только после полной загрузки
-          grid.style.display = 'block';
+        // Переключаемся на masonry
+        grid.style.display = 'block';
 
         // Determine column count based on width
         const containerWidth = grid.offsetWidth;
@@ -176,38 +172,43 @@ const { album } = Astro.props;
         grid.style.height = (maxHeight - gap) + 'px';
         
         // Плавно показываем результат
-        setTimeout(() => {
-          grid.style.opacity = '1';
-        }, 50);
-      }, 300);
+        grid.style.opacity = '1';
       }
 
-      // Initialize masonry (запускается после загрузки всех изображений)
+      // Initialize masonry
       function initMasonry() {
+        const grid = document.querySelector('.gallery-grid');
+        if (!grid) return;
+        
+        // Скрываем сетку изначально
+        grid.style.opacity = '0';
+        
+        // Запускаем masonry сразу после DOM
+        setTimeout(layoutMasonry, 100);
+        
+        // Повторяем после загрузки изображений для точности
         const images = document.querySelectorAll('.photo-item img');
-        let loadedImages = 0;
+        if (images.length > 0) {
+          let loadedImages = 0;
 
-        const checkAllLoaded = () => {
-          loadedImages++;
-          if (loadedImages === images.length) {
-            setTimeout(layoutMasonry, 800);
-          }
-        };
+          const checkAllLoaded = () => {
+            loadedImages++;
+            if (loadedImages === images.length) {
+              setTimeout(layoutMasonry, 50);
+            }
+          };
 
-        if (images.length === 0) {
-          return;
+          images.forEach(img => {
+            if (img.complete) {
+              checkAllLoaded();
+            } else {
+              img.addEventListener('load', checkAllLoaded);
+              img.addEventListener('error', checkAllLoaded);
+            }
+          });
         }
 
-        images.forEach(img => {
-          if (img.complete) {
-            checkAllLoaded();
-          } else {
-            img.addEventListener('load', checkAllLoaded);
-            img.addEventListener('error', checkAllLoaded);
-          }
-        });
-
-        // Rebuild on window resize (только если masonry активен)
+        // Rebuild on window resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
@@ -336,8 +337,8 @@ const { album } = Astro.props;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
-    transition: all 0.6s ease, opacity 0.4s ease;
-    opacity: 1;
+    transition: opacity 0.6s ease;
+    opacity: 0;
   }
 
   @media (max-width: 480px) {

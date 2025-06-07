@@ -170,86 +170,87 @@ const photographer = {
 				const cards = Array.from(grid.children) as HTMLElement[];
 				if (cards.length === 0) return;
 
-				// Плавно скрываем для переключения
-				grid.style.opacity = '0.7';
+				// Переключаемся на masonry
+				grid.style.display = 'block';
+
+				// Определяем количество колонок в зависимости от ширины
+				const containerWidth = grid.offsetWidth;
+				let columnCount = 4;
 				
-				setTimeout(() => {
-					// Переключаемся на masonry только после полной загрузки
-					grid.style.display = 'block';
+				if (containerWidth >= 1200) columnCount = 5;
+				else if (containerWidth >= 900) columnCount = 4;
+				else if (containerWidth >= 600) columnCount = 3;
+				else if (containerWidth >= 480) columnCount = 2;
+				else columnCount = 1;
 
-					// Определяем количество колонок в зависимости от ширины
-					const containerWidth = grid.offsetWidth;
-					let columnCount = 4;
+				// Вычисляем ширину колонки
+				const gap = 16;
+				const columnWidth = (containerWidth - (gap * (columnCount - 1))) / columnCount;
+				
+				// Инициализируем массив высот колонок
+				const columnHeights = new Array(columnCount).fill(0);
+
+				// Размещаем каждую карточку
+				cards.forEach((card, index) => {
+					// Находим самую короткую колонку
+					const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
 					
-					if (containerWidth >= 1200) columnCount = 5;
-					else if (containerWidth >= 900) columnCount = 4;
-					else if (containerWidth >= 600) columnCount = 3;
-					else if (containerWidth >= 480) columnCount = 2;
-					else columnCount = 1;
-
-					// Вычисляем ширину колонки
-					const gap = 16;
-					const columnWidth = (containerWidth - (gap * (columnCount - 1))) / columnCount;
+					// Вычисляем позицию
+					const x = shortestColumnIndex * (columnWidth + gap);
+					const y = columnHeights[shortestColumnIndex];
 					
-					// Инициализируем массив высот колонок
-					const columnHeights = new Array(columnCount).fill(0);
-
-					// Размещаем каждую карточку
-					cards.forEach((card, index) => {
-						// Находим самую короткую колонку
-						const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
-						
-						// Вычисляем позицию
-						const x = shortestColumnIndex * (columnWidth + gap);
-						const y = columnHeights[shortestColumnIndex];
-						
-						// Устанавливаем размер и позицию
-						card.style.position = 'absolute';
-						card.style.left = x + 'px';
-						card.style.top = y + 'px';
-						card.style.width = columnWidth + 'px';
-						
-						// Обновляем высоту колонки
-						columnHeights[shortestColumnIndex] += card.offsetHeight + gap;
-					});
-
-					// Устанавливаем высоту контейнера
-					const maxHeight = Math.max(...columnHeights);
-					grid.style.height = (maxHeight - gap) + 'px';
+					// Устанавливаем размер и позицию
+					card.style.position = 'absolute';
+					card.style.left = x + 'px';
+					card.style.top = y + 'px';
+					card.style.width = columnWidth + 'px';
 					
-					// Плавно показываем результат
-					setTimeout(() => {
-						grid.style.opacity = '1';
-					}, 50);
-				}, 300);
-			}
-
-			// Инициализация masonry (запускается после загрузки всех изображений)
-			function initMasonry() {
-				const images = document.querySelectorAll('.album-card img') as NodeListOf<HTMLImageElement>;
-				let loadedImages = 0;
-
-				const checkAllLoaded = () => {
-					loadedImages++;
-					if (loadedImages === images.length) {
-						setTimeout(layoutMasonry, 800);
-					}
-				};
-
-				if (images.length === 0) {
-					return;
-				}
-
-				images.forEach(img => {
-					if (img.complete) {
-						checkAllLoaded();
-					} else {
-						img.addEventListener('load', checkAllLoaded);
-						img.addEventListener('error', checkAllLoaded);
-					}
+					// Обновляем высоту колонки
+					columnHeights[shortestColumnIndex] += card.offsetHeight + gap;
 				});
 
-				// Перестраиваем при изменении размера окна (только если masonry активен)
+				// Устанавливаем высоту контейнера
+				const maxHeight = Math.max(...columnHeights);
+				grid.style.height = (maxHeight - gap) + 'px';
+				
+				// Плавно показываем результат
+				grid.style.opacity = '1';
+			}
+
+			// Инициализация masonry
+			function initMasonry() {
+				const grid = document.querySelector('.albums-grid') as HTMLElement;
+				if (!grid) return;
+				
+				// Скрываем сетку изначально
+				grid.style.opacity = '0';
+				
+				// Запускаем masonry сразу после DOM
+				setTimeout(layoutMasonry, 100);
+				
+				// Повторяем после загрузки изображений для точности
+				const images = document.querySelectorAll('.album-card img') as NodeListOf<HTMLImageElement>;
+				if (images.length > 0) {
+					let loadedImages = 0;
+					
+					const checkAllLoaded = () => {
+						loadedImages++;
+						if (loadedImages === images.length) {
+							setTimeout(layoutMasonry, 50);
+						}
+					};
+
+					images.forEach(img => {
+						if (img.complete) {
+							checkAllLoaded();
+						} else {
+							img.addEventListener('load', checkAllLoaded);
+							img.addEventListener('error', checkAllLoaded);
+						}
+					});
+				}
+
+				// Перестраиваем при изменении размера окна
 				let resizeTimeout: any;
 				window.addEventListener('resize', () => {
 					clearTimeout(resizeTimeout);
@@ -536,8 +537,8 @@ const photographer = {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 		gap: 16px;
-		transition: all 0.6s ease, opacity 0.4s ease;
-		opacity: 1;
+		transition: opacity 0.6s ease;
+		opacity: 0;
 	}
 
 	@media (max-width: 480px) {
