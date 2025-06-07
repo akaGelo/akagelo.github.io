@@ -21,6 +21,21 @@ const { album } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{album.title} | Example Photographer</title>
+    
+    <!-- Preload первых фотографий для быстрой загрузки -->
+    {album.photos.slice(0, 3).map(photo => (
+      <link rel="preload" as="image" href={photo.src} />
+    ))}
+    
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => console.log('[SW] Registered successfully:', registration))
+            .catch(error => console.log('[SW] Registration failed:', error));
+        });
+      }
+    </script>
   </head>
   <body>
     <main>

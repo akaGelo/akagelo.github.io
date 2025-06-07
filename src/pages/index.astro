@@ -27,6 +27,21 @@ const photographer = {
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Example Photographer | Photography</title>
+		
+		<!-- Preload критических изображений для hero слайдера -->
+		{heroSlides.slice(0, 2).map(slide => (
+			<link rel="preload" as="image" href={slide} />
+		))}
+		
+		<script>
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('/sw.js')
+						.then(registration => console.log('[SW] Registered successfully:', registration))
+						.catch(error => console.log('[SW] Registration failed:', error));
+				});
+			}
+		</script>
 	</head>
 	  <body>
     <div class="layout">
