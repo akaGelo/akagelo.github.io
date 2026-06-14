@@ -1,0 +1,26 @@
+# build output
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# env
+.env
+.env.production
+.env.local
+
+# inbox — перевалочная папка для ингеста
+inbox/
+
+# мастеры галереи: прототипный набор, будет заменён. Перед боевым деплоем
+# un-ignore (закомментировать строку) и закоммитить финальные фото — CI собирает из них.
+src/assets/photos/
+
+# misc
+.DS_Store
+*.log
+.vscode/
+.claude/
+.idea/
+*.iml
