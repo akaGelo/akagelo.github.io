@@ -7,7 +7,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "ingest": "node scripts/ingest.mjs"
+    "scan": "node scripts/scan-rated.mjs",
+    "import": "node scripts/import-rated.mjs",
+    "ingest": "node scripts/ingest.mjs",
+    "reencode": "node scripts/reencode.mjs",
+    "lqip": "node scripts/gen-lqip.mjs"
   },
   "dependencies": {
     "astro": "^5.9.0",

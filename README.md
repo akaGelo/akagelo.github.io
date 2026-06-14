@@ -1,67 +1,65 @@
-# vyukov.ru — фотогалерея
+# vyukov.ru — photo gallery
 
-Статичный сайт на **Astro**. Хостинг — GitHub Pages, домен `vyukov.ru`.
-Каталог построен на тегах и датах: альбомов нет, поездки и подгруппы — это просто теги.
+Статичный фотосайт на **Astro**. Хостинг — GitHub Pages, домен `vyukov.ru`.
+Каталог — по **темам**, **годам** и **избранному** (без альбомов). Сайт и теги на английском.
+
+## Стек и идеи
+
+- Astro (output: static) + sharp/`astro:assets` — адаптивные WebP на сборке.
+- Светлая тема, самохостед-шрифты (`Fraunces` + `Hanken Grotesk`, `public/fonts/`).
+- Masonry «новые сверху» (JS, кратчайшая колонка), фильтры комбинируются, кнопка **All** сбрасывает.
+- Лайтбокс: стрелки/←→/свайп, листание внутри активного фильтра, прогрессивная загрузка
+  2560→3840 (DPR-aware), blur-up в ленте, крутилка загрузки.
 
 ## Как добавить фотографии
 
-1. **Кинь снимки в папку `inbox/`** (хоть пачкой после поездки).
-2. **Прогони ингест:**
-   ```bash
-   npm run ingest
-   ```
-   Скрипт сам: возьмёт **дату из EXIF** (если нет — дату файла), скопирует оригинал в
-   `src/assets/photos/`, создаст YAML-заготовку в `src/content/photos/` и перенесёт
-   обработанный файл в `inbox/_done/`.
-3. **Каталогизируй в Claude Code** — скажи «каталогизируй новые фото». Claude посмотрит
-   на каждый снимок и проставит **тип, теги и подпись** (переиспользуя существующие теги,
-   без дублей). Можно и руками — это просто YAML.
-4. **Опубликуй:**
-   ```bash
-   git add -A && git commit -m "новые фото" && git push
-   ```
-   GitHub Actions соберёт сайт и выкатит на Pages.
+Оригиналы держи в своей фототеке (`~/Photos`) — в репозиторий они не идут. В репо попадает
+только сжатый мастер (3840px) в `src/assets/photos/`.
 
-## Просмотр и сборка
+**Вариант А — пачкой по рейтингу (Lightroom):**
+```bash
+npm run scan        # ищет в фототеке фото с рейтингом > 3 → /tmp/rated.json
+npm run import      # сжимает в 3840, кладёт в репо, создаёт YAML-заготовки (с src)
+```
+**Вариант Б — вручную через inbox:**
+```bash
+# кинуть файлы в ./inbox
+npm run ingest      # EXIF-дата, сжатие 3840, YAML-заготовки
+```
+Затем:
+```bash
+# в Claude Code: «каталогизируй новые фото» — проставит темы (Claude смотрит снимки)
+npm run lqip        # обновить blur-up превью
+npm run dev         # посмотреть локально
+```
+
+## Редактирование
+
+Каждое фото — это `src/assets/photos/<slug>.jpg` + `src/content/photos/<slug>.yaml`:
+```yaml
+title: ""                  # необязательно
+image: dsc00602.jpg
+src: "2024/DSC00602.jpg"   # путь в фототеке (провенанс для переэнкода)
+date: 2024-08-09
+tags: [landscape, travel]  # темы
+favorite: false            # ★ в фильтре «Favorites»
+rating: 5                  # из EXIF/XMP, опционально
+```
+- **Удалить фото:** удалить оба файла (`.jpg` и `.yaml`).
+- **В избранное:** `favorite: true`.
+- **Сменить разрешение мастеров:** `npm run reencode [px]` (берёт оригиналы по `src`), затем `npm run lqip`.
+
+**Темы** (8 кураторских): `street, portrait, landscape, nature, animals, architecture, travel, b&w`.
+
+## Сборка и деплой
 
 ```bash
-npm run dev      # локальный сайт на http://localhost:4321
-npm run build    # прод-сборка в dist/
+npm run build       # прод-сборка в dist/
 ```
+GitHub Actions (`.github/workflows/deploy.yml`) собирает и публикует на Pages при push в `master`.
 
-## Что под капотом
+> ⚠️ Сейчас `src/assets/photos/` в `.gitignore` (прототипный набор фото будет заменён).
+> Перед боевым деплоем раскомментировать строку в `.gitignore` и закоммитить финальные фото —
+> CI собирает сайт из них.
 
-- **Скорость:** прод-сборка — чистый HTML + картинки в WebP с адаптивным `srcset` + крошечный
-  inline-JS. Никакого React/CMS в бандле.
-- **Галерея:** masonry-сетка (Pinterest-стиль), фильтры по типу/году/тегам, лайтбокс.
-- **Данные:** `src/content/photos/*.yaml` (по записи на фото), схема и валидация — в
-  `src/content.config.ts` (Astro content collections).
-- **Картинки:** оригиналы лежат в `src/assets/photos/` как есть; адаптивные WebP-варианты
-  генерируются при сборке (`astro:assets` + sharp) и не содержат EXIF/GPS.
-
-## Поля записи (YAML)
-
-```yaml
-title: ""              # короткое название (необязательно)
-image: lake-morning.jpg
-date: 2024-08-12        # из EXIF, ставится ингестом
-type: landscape         # landscape|portrait|street|reportage|architecture|nature|travel|bw|other
-tags: [Карелия 2024, озеро]
-caption: ""             # подпись для лайтбокса
-featured: false         # true → попадает в hero на главной
-```
-
-## Структура
-
-```
-scripts/ingest.mjs        ингест из inbox/ (EXIF-дата, копия, YAML-заготовка)
-inbox/                    дропзона (в git не попадает), inbox/_done/ — обработанные
-src/content.config.ts     схема коллекции photos
-src/content/photos/       записи фото (YAML)
-src/assets/photos/        оригиналы изображений
-src/pages/index.astro     главная: hero + сетка + фильтры + лайтбокс
-src/layouts/Layout.astro  каркас страницы
-src/styles/global.css     темы (светлая/тёмная), токены
-public/CNAME              домен vyukov.ru
-.github/workflows/deploy.yml  автодеплой на Pages
-```
+Подробности для AI-агента и нюансы — в `CLAUDE.md`.
