@@ -17,6 +17,9 @@ inbox/
 # un-ignore (закомментировать строку) и закоммитить финальные фото — CI собирает из них.
 src/assets/photos/
 
+# pickers — локальные HTML для отбора фото из фототеки
+pickers/
+
 # misc
 .DS_Store
 *.log

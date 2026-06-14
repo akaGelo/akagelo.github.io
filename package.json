@@ -11,7 +11,8 @@
     "import": "node scripts/import-rated.mjs",
     "ingest": "node scripts/ingest.mjs",
     "reencode": "node scripts/reencode.mjs",
-    "lqip": "node scripts/gen-lqip.mjs"
+    "lqip": "node scripts/gen-lqip.mjs",
+    "picker": "node scripts/make-picker.mjs"
   },
   "dependencies": {
     "astro": "^5.9.0",

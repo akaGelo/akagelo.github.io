@@ -52,6 +52,7 @@ structured output), чтобы картинки не жрали основной
 | `npm run ingest` | inbox/ → то же, дата из EXIF |
 | `npm run reencode [px]` | переэнкод мастеров по `src` из YAML (смена разрешения), default 3840 |
 | `npm run lqip` | blur-up превью → `src/lqip.json` |
+| `node scripts/make-picker.mjs <папка>` | самодостаточный HTML-пикер для отбора фото из папки → `pickers/<папка>.html` (выбор → список путей `папка/файл.jpg`) |
 
 `PHOTO_LIB` переопределяет путь к фототеке (default `~/Photos`).
 
