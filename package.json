@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "scan": "node scripts/scan-rated.mjs",
     "import": "node scripts/import-rated.mjs",
+    "import-list": "node scripts/import-list.mjs",
     "ingest": "node scripts/ingest.mjs",
     "reencode": "node scripts/reencode.mjs",
     "lqip": "node scripts/gen-lqip.mjs",
