@@ -33,7 +33,8 @@ for (const r of data) {
   set.sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
   for (const t of set) dist.set(t, (dist.get(t) || 0) + 1);
   let y = fs.readFileSync(f, "utf8");
-  y = y.replace(/^tags: \[\]$/m, "tags:\n" + set.map((t) => "  - " + t).join("\n"));
+  // заменяем весь блок tags (пустой или с тегами) до строки favorite:
+  y = y.replace(/^tags:[\s\S]*?(?=^favorite:)/m, "tags:\n" + set.map((t) => "  - " + t).join("\n") + "\n");
   fs.writeFileSync(f, y);
   applied++;
 }
