@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+# Форсим Node 24 для JS-экшенов (checkout/deploy-pages ещё на Node 20) — убирает депрекацию.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 # Один деплой за раз, предыдущий незавершённый отменяем.
 concurrency:
   group: pages
