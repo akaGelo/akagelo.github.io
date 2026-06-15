@@ -3,6 +3,6 @@ image: dsc06375.jpg
 src: "2025/DSC06375.jpg"
 date: 2025-11-26
 tags:
+  - street
   - portrait
-  - architecture
-favorite: false
+favorite: true

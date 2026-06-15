@@ -3,6 +3,5 @@ image: dsc08185.jpg
 src: "2025/DSC08185.jpg"
 date: 2025-11-29
 tags:
-  - landscape
-  - travel
-favorite: false
+  - street
+favorite: true

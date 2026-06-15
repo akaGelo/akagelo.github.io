@@ -13,7 +13,9 @@
     "ingest": "node scripts/ingest.mjs",
     "reencode": "node scripts/reencode.mjs",
     "lqip": "node scripts/gen-lqip.mjs",
-    "picker": "node scripts/make-picker.mjs"
+    "picker": "node scripts/make-picker.mjs",
+    "final-picker": "node scripts/make-final-picker.mjs",
+    "apply-final": "node scripts/apply-final.mjs"
   },
   "dependencies": {
     "astro": "^5.9.0",

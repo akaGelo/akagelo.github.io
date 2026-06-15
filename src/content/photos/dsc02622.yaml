@@ -3,6 +3,6 @@ image: dsc02622.jpg
 src: "2024/DSC02622.jpg"
 date: 2024-09-01
 tags:
+  - street
   - landscape
-  - travel
-favorite: false
+favorite: true
