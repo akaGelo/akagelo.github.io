@@ -51,10 +51,8 @@ const photos = entries
   .sort((a, b) => b.ts - a.ts);
 
 const full: Record<string, string> = {};
-const fullHi: Record<string, string> = {};
 for (const p of photos) {
   full[p.slug] = (await getImage({ src: p.img, width: 2560, format: "webp" })).src;
-  fullHi[p.slug] = (await getImage({ src: p.img, width: 3840, format: "webp" })).src;
 }
 
 const years = [...new Set(photos.map((p) => p.year))].sort().reverse();
@@ -111,7 +109,6 @@ const yearNow = new Date().getFullYear();
         data-fav={p.favorite ? "1" : "0"}
         data-ar={(p.img.height / p.img.width).toFixed(4)}
         data-full={full[p.slug]}
-        data-full-hi={fullHi[p.slug]}
         data-meta={`${p.dateFull} · ${p.themes.map(themeLabel).join(", ")}`}
         aria-label={`Open photo, ${p.dateFull}`}
       >
@@ -368,7 +365,6 @@ const yearNow = new Date().getFullYear();
   let list: HTMLButtonElement[] = [];
   let cur = 0;
 
-  const need3840 = () => window.innerWidth * window.devicePixelRatio * 0.92 > 2560;
   let renderToken = 0;
 
   function applySize(c: HTMLButtonElement) {
@@ -382,11 +378,10 @@ const yearNow = new Date().getFullYear();
 
   function showImage(c: HTMLButtonElement, showThumb: boolean) {
     const token = ++renderToken;
-    const url2560 = c.dataset.full || "";
-    const url3840 = c.dataset.fullHi || url2560;
+    const url = c.dataset.full || "";
     setBusy(true);
 
-    // Холодное открытие — сразу показать (НЕ размытую) миниатюру, чтобы не было пустоты.
+    // Холодное открытие — сразу показать миниатюру, чтобы не было пустоты.
     // Навигация — держим предыдущий резкий кадр, пока не догрузится новый.
     if (showThumb) {
       const thumb = c.querySelector("img");
@@ -395,35 +390,23 @@ const yearNow = new Date().getFullYear();
     }
 
     const done = () => { if (token === renderToken) setBusy(false); };
-    // 1) резкий 2560, как только готов (без блюра)
     const lo = new Image();
     lo.onload = () => {
       if (token !== renderToken) return;
-      lbImg.src = url2560;
+      lbImg.src = url;
       applySize(c);
-      // 2) на 4K/retina подтягиваем 3840 и заменяем (резкое → резче)
-      if (need3840() && url3840 !== url2560) {
-        const hi = new Image();
-        hi.onload = () => { if (token === renderToken) { lbImg.src = url3840; setBusy(false); } };
-        hi.onerror = done;
-        hi.src = url3840;
-      } else {
-        done();
-      }
+      done();
     };
     lo.onerror = done;
-    lo.src = url2560;
+    lo.src = url;
   }
 
-  // агрессивный предзагруз: окно соседей ±3 в 2560, ближайшие ±1 в 3840 на больших экранах
+  // агрессивный предзагруз: окно соседей ±3
   function preloadAround() {
-    const hi = need3840();
     for (let d = 1; d <= 3; d++) {
       for (const j of [cur + d, cur - d]) {
         const n = list[j];
-        if (!n) continue;
-        new Image().src = n.dataset.full || "";
-        if (hi && d === 1 && n.dataset.fullHi) new Image().src = n.dataset.fullHi;
+        if (n) new Image().src = n.dataset.full || "";
       }
     }
   }
