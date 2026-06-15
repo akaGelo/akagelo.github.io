@@ -1,13 +1,14 @@
 export const meta = {
   name: 'tag-batch',
-  description: 'Vision-тегирование батча фото (Sonnet): темы из набора + fits/suggest',
-  phases: [{ title: 'Themes', detail: 'Sonnet: 1-3 темы + флаг «не вписывается»', model: 'sonnet' }],
+  description: 'Vision-тегирование батча фото: темы из набора + fits/suggest',
+  phases: [{ title: 'Themes', detail: 'темы (1-3) + флаг «не вписывается»', model: '__MODEL__' }],
 };
 
 const ROOT = '/home/gelo/vyukov.ru';
 const slugs = __SLUGS__;
 
-const THEMES = ['street', 'portrait', 'landscape', 'nature', 'animals', 'architecture', 'travel'];
+const THEMES = ['street', 'portrait', 'landscape', 'nature', 'animals', 'zoo', 'macro',
+  'architecture', 'travel', 'market', 'night'];
 const SCHEMA = {
   type: 'object',
   additionalProperties: false,
@@ -22,10 +23,13 @@ const SCHEMA = {
 function promptFor(img) {
   return (
     'Открой изображение инструментом Read: ' + img + '\n\n' +
-    'Назначь 1-3 темы РОВНО из набора: street, portrait, landscape, nature, animals, architecture, travel.\n' +
-    'Предпочитай 1-2 самые определяющие (жанр + сюжет). Чёрно-белость НЕ указывай — её определю отдельно.\n' +
-    'Также оцени: хорошо ли набор описывает кадр? fits=true если 1-2 темы честно отражают суть;\n' +
-    'fits=false если заметно не вписывается (ночной город, макро, еда, спорт, абстракция, концерт, интерьер) —\n' +
+    'Назначь 1-3 темы РОВНО из набора (предпочитай 1-2 самые определяющие, жанр + сюжет):\n' +
+    'street (уличная сцена/жанр), portrait (портрет крупно), landscape (пейзаж/вид: море, поля, горы),\n' +
+    'nature (растения/природа крупно без людей), animals (животные как объект), zoo (животные в зоопарке/вольере),\n' +
+    'macro (макро, очень крупный план мелкого объекта), architecture (здания/сооружения),\n' +
+    'travel (достопримечательности/заграница), market (рынок/ярмарка/прилавки), night (ночной город/ночная сцена).\n' +
+    'Чёрно-белость НЕ указывай — её определю отдельно.\n' +
+    'Также оцени fits: true если набор честно описывает кадр; false если заметно не вписывается —\n' +
     'тогда в suggest предложи ОДНО слово-тему (англ., нижний регистр). Верни строго через структурный вывод.'
   );
 }
@@ -36,7 +40,7 @@ const results = await parallel(
     agent(promptFor(ROOT + '/src/assets/photos/' + slug + '.jpg'), {
       label: 'theme:' + slug,
       phase: 'Themes',
-      model: 'sonnet',
+      model: '__MODEL__',
       schema: SCHEMA,
     }).then((r) => (r ? { slug, themes: r.themes, fits: r.fits, suggest: r.suggest || '' } : null)),
   ),
