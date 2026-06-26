@@ -158,7 +158,7 @@ header h1{font-size:15px;margin:0 8px 0 0;font-weight:600}
 <script>
 var PHOTOS = __DATA__;
 var THEMES = __THEMES__;
-var KEY = "vyukov-final-v4";
+var KEY = "vyukov-final-v5";
 var state = JSON.parse(localStorage.getItem(KEY) || "{}");
 
 function eff(p){
