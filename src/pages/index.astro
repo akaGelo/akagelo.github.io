@@ -8,13 +8,11 @@ import lqipData from "../lqip.json";
 const LQIP = lqipData as Record<string, string>;
 
 const THEME_ORDER = [
-  "street", "portrait", "landscape", "nature", "animals", "zoo", "macro",
-  "architecture", "travel", "market", "night", "b&w",
+  "street", "portrait", "landscape", "animals", "architecture", "night", "b&w",
 ];
 const THEME_LABELS: Record<string, string> = {
-  street: "Street", portrait: "Portrait", landscape: "Landscape", nature: "Nature",
-  animals: "Animals", zoo: "Zoo", macro: "Macro", architecture: "Architecture",
-  travel: "Travel", market: "Market", night: "Night", "b&w": "B&W",
+  street: "Street", portrait: "Portrait", landscape: "Landscape",
+  animals: "Animals", architecture: "Architecture", night: "Night", "b&w": "B&W",
 };
 const themeLabel = (t: string) => THEME_LABELS[t] ?? t;
 
