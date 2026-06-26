@@ -150,15 +150,15 @@ header h1{font-size:15px;margin:0 8px 0 0;font-weight:600}
   <div class="bar">
     <span class="lbinfo" id="lbinfo"></span>
     <div class="chips" id="lbchips"></div>
-    <button class="lbfav" id="lbfav">★ Favorite</button>
-    <button class="lbrm" id="lbrm">🗑 Remove</button>
+    <button class="lbfav" id="lbfav" title="Pick (P)">★ Favorite</button>
+    <button class="lbrm" id="lbrm" title="Reject (X)">🗑 Remove</button>
   </div>
 </div>
 
 <script>
 var PHOTOS = __DATA__;
 var THEMES = __THEMES__;
-var KEY = "vyukov-final-v2";
+var KEY = "vyukov-final-v4";
 var state = JSON.parse(localStorage.getItem(KEY) || "{}");
 
 function eff(p){
@@ -288,8 +288,9 @@ document.addEventListener("keydown", function(ev){
   if(ev.key==="Escape")closeLB();
   else if(ev.key==="ArrowLeft")lbStep(-1);
   else if(ev.key==="ArrowRight")lbStep(1);
-  else if(ev.key==="r"||ev.key==="R"||ev.key==="Delete"){ var p=lbList[lbIdx],e=eff(p); e.remove=!e.remove; setS(p,e); showLB(); }
-  else if(ev.key==="f"||ev.key==="F"){ var p2=lbList[lbIdx],e2=eff(p2); e2.favorite=!e2.favorite; setS(p2,e2); showLB(); }
+  else if(ev.key==="x"||ev.key==="X"){ var p=lbList[lbIdx],e=eff(p); e.remove=!e.remove; setS(p,e); showLB(); }       // Reject
+  else if(ev.key==="p"||ev.key==="P"){ var p2=lbList[lbIdx],e2=eff(p2); e2.favorite=!e2.favorite; setS(p2,e2); showLB(); } // Pick
+  else if(ev.key==="u"||ev.key==="U"){ var p3=lbList[lbIdx],e3=eff(p3); e3.remove=false; e3.favorite=false; setS(p3,e3); showLB(); } // Unflag
 });
 
 render();
