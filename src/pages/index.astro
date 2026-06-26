@@ -55,6 +55,7 @@ for (const p of photos) {
   full[p.slug] = (await getImage({ src: p.img, width: 2560, format: "webp" })).src;
 }
 
+const EAGER = 8; // первые карточки грузим приоритетно — ускоряет появление верхнего экрана (LCP)
 const years = [...new Set(photos.map((p) => p.year))].sort().reverse();
 const themesPresent = THEME_ORDER.filter((t) => photos.some((p) => p.themes.includes(t)));
 const favCount = photos.filter((p) => p.favorite).length;
@@ -117,7 +118,8 @@ const yearNow = new Date().getFullYear();
           alt=""
           widths={[320, 480, 640, 960]}
           sizes="(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 300px"
-          loading="lazy"
+          loading={i < EAGER ? "eager" : "lazy"}
+          fetchpriority={i < EAGER ? "high" : "auto"}
           decoding="async"
           format="webp"
         />
@@ -126,6 +128,32 @@ const yearNow = new Date().getFullYear();
     ))}
     </div>
   </main>
+
+  {/* Синхронная первичная раскладка масонри — выполняется во время парсинга,
+      ДО первого paint, поэтому карточки сразу появляются в сетке (без FOUC-разлёта).
+      Единый источник раскладки: кладём в window.__mason, module-скрипт переиспользует. */}
+  <script is:inline>
+    (function () {
+      var grid = document.getElementById("grid");
+      var cards = [].slice.call(grid.querySelectorAll(".card"));
+      var GAP = 14;
+      function columns(w) { return w < 520 ? 2 : Math.max(2, Math.floor((w + GAP) / (290 + GAP))); }
+      function layout() {
+        var w = grid.clientWidth; if (!w) return;
+        var cols = columns(w), colW = (w - GAP * (cols - 1)) / cols, colH = new Array(cols).fill(0);
+        for (var n = 0; n < cards.length; n++) {
+          var c = cards[n]; if (c.hidden) continue;
+          var k = 0; for (var i = 1; i < cols; i++) if (colH[i] < colH[k]) k = i;
+          c.style.width = colW + "px";
+          c.style.transform = "translate(" + (colW + GAP) * k + "px, " + colH[k] + "px)";
+          colH[k] += colW * parseFloat(c.dataset.ar || "1") + GAP;
+        }
+        grid.style.height = Math.max(0, Math.max.apply(null, colH) - GAP) + "px";
+      }
+      window.__mason = layout;
+      layout();
+    })();
+  </script>
 
   <footer class="footer wrap">
     <span>© {yearNow} Oleg Vyukov</span>
@@ -204,7 +232,7 @@ const yearNow = new Date().getFullYear();
     position: absolute; top: 0; left: 0; padding: 0; border: 0;
     background-color: var(--card); background-size: cover; background-position: center;
     border-radius: var(--radius); overflow: hidden; cursor: zoom-in;
-    text-align: left; color: inherit; will-change: transform;
+    text-align: left; color: inherit;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     animation: rise 0.5s both; animation-delay: calc(var(--i) * 28ms);
   }
@@ -291,29 +319,10 @@ const yearNow = new Date().getFullYear();
     theme: null, year: null, fav: false,
   };
 
-  // Pinterest-masonry: каждую карточку (в хронологическом DOM-порядке) кладём
-  // в самую короткую колонку. Высоты берём из data-ar, без layout shift.
-  const GAP = 14;
-  function columns(w: number) {
-    if (w < 520) return 2;
-    return Math.max(2, Math.floor((w + GAP) / (290 + GAP)));
-  }
-  function layout() {
-    const w = grid.clientWidth;
-    if (!w) return;
-    const cols = columns(w);
-    const colW = (w - GAP * (cols - 1)) / cols;
-    const colH = new Array(cols).fill(0);
-    for (const c of cards) {
-      if (c.hidden) continue;
-      let k = 0;
-      for (let i = 1; i < cols; i++) if (colH[i] < colH[k]) k = i;
-      c.style.width = `${colW}px`;
-      c.style.transform = `translate(${(colW + GAP) * k}px, ${colH[k]}px)`;
-      colH[k] += colW * parseFloat(c.dataset.ar || "1") + GAP;
-    }
-    grid.style.height = `${Math.max(0, Math.max(...colH) - GAP)}px`;
-  }
+  // Pinterest-masonry: каждую карточку (в хронологическом DOM-порядке) кладём в самую
+  // короткую колонку; высоты из data-ar, без layout shift. Сам алгоритм — в синхронном
+  // is:inline-скрипте (отрабатывает до первого paint), здесь только переиспользуем его.
+  const layout = () => (window as Window & { __mason?: () => void }).__mason?.();
   let resizeT = 0;
   function relayout() { clearTimeout(resizeT); resizeT = window.setTimeout(layout, 120); }
 
@@ -449,11 +458,9 @@ const yearNow = new Date().getFullYear();
     if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
   }, { passive: true });
 
-  // первичная раскладка masonry + плавность на последующих
-  layout();
+  // первая раскладка уже сделана inline (до paint); здесь — только плавность далее
   requestAnimationFrame(() => grid.classList.add("mason-ready"));
   window.addEventListener("resize", relayout);
-  window.addEventListener("load", layout);
 
   // blur-up: проявляем фото, когда загрузилось (поверх LQIP-фона карточки)
   for (const c of cards) {
