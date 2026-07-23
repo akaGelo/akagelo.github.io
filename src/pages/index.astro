@@ -23,7 +23,6 @@ const imageModules = import.meta.glob<{ default: ImageMetadata }>(
 const byName: Record<string, ImageMetadata> = {};
 for (const path in imageModules) byName[path.split("/").pop()!] = imageModules[path].default;
 
-const fmtShort = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" });
 const fmtFull = new Intl.DateTimeFormat("en-US", { day: "numeric", month: "short", year: "numeric" });
 
 const entries = await getCollection("photos");
@@ -38,7 +37,6 @@ const photos = entries
       slug: id,
       themes,
       year: String(data.date.getUTCFullYear()),
-      dateShort: fmtShort.format(data.date),
       dateFull: fmtFull.format(data.date),
       favorite: data.favorite,
       ts: data.date.getTime(),
@@ -121,7 +119,6 @@ const yearNow = new Date().getFullYear();
           decoding="async"
           format="webp"
         />
-        <span class="date">{p.dateShort}</span>
       </button>
     ))}
     </div>
@@ -245,12 +242,6 @@ const yearNow = new Date().getFullYear();
   }
   .card:hover { z-index: 1; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14); }
   .card:hover::after { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.13); }
-  .card .date {
-    position: absolute; left: 10px; bottom: 9px; font-size: 0.72rem; letter-spacing: 0.02em;
-    color: #fff; opacity: 0; transition: opacity 0.2s;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8); pointer-events: none;
-  }
-  .card:hover .date { opacity: 0.9; }
 
   .footer {
     display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap;
@@ -297,7 +288,7 @@ const yearNow = new Date().getFullYear();
   .lb-nav:focus, .lb-nav:focus-visible, .lb-close:focus, .lb-close:focus-visible { outline: none; }
 
   @media (max-width: 640px) {
-    .card .date { opacity: 0.85; }
+    .filters { position: static; }
     .lb-nav { width: 24vw; font-size: 1.8rem; }
   }
   @media (prefers-reduced-motion: reduce) {
