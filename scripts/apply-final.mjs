@@ -7,8 +7,7 @@ import fs from "node:fs";
 
 const CONTENT = "src/content/photos";
 const ASSETS = "src/assets/photos";
-const ORDER = ["street", "portrait", "landscape", "nature", "animals", "zoo", "macro",
-  "architecture", "travel", "market", "night", "b&w"];
+const ORDER = ["street", "portrait", "landscape", "animals", "architecture", "night", "b&w"];
 
 const file = process.argv[2];
 if (!file) { console.error("укажи JSON: node scripts/apply-final.mjs <файл>"); process.exit(1); }

@@ -13,8 +13,7 @@ const data = Array.isArray(parsed) ? parsed : parsed.result;
 
 const CONTENT = "src/content/photos";
 const ASSETS = "src/assets/photos";
-const ORDER = ["street", "portrait", "landscape", "nature", "animals", "zoo", "macro",
-  "architecture", "travel", "market", "night", "b&w"];
+const ORDER = ["street", "portrait", "landscape", "animals", "architecture", "night", "b&w"];
 
 async function isBW(f) {
   const { data: b } = await sharp(f).resize(40, 40, { fit: "inside" }).removeAlpha().raw().toBuffer({ resolveWithObject: true });

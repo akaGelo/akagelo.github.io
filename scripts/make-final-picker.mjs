@@ -14,12 +14,10 @@ const ASSETS = "src/assets/photos";
 const OUT = "pickers/final.html";
 const THUMB = 320;
 
-const ORDER = ["street", "portrait", "landscape", "nature", "animals", "zoo", "macro",
-  "architecture", "travel", "market", "night", "b&w"];
+const ORDER = ["street", "portrait", "landscape", "animals", "architecture", "night", "b&w"];
 const LABELS = {
-  street: "Street", portrait: "Portrait", landscape: "Landscape", nature: "Nature",
-  animals: "Animals", zoo: "Zoo", macro: "Macro", architecture: "Architecture",
-  travel: "Travel", market: "Market", night: "Night", "b&w": "B&W",
+  street: "Street", portrait: "Portrait", landscape: "Landscape",
+  animals: "Animals", architecture: "Architecture", night: "Night", "b&w": "B&W",
 };
 
 // мини-парсер нужных полей YAML
@@ -158,7 +156,7 @@ header h1{font-size:15px;margin:0 8px 0 0;font-weight:600}
 <script>
 var PHOTOS = __DATA__;
 var THEMES = __THEMES__;
-var KEY = "vyukov-final-v5";
+var KEY = "vyukov-final-v7";
 var state = JSON.parse(localStorage.getItem(KEY) || "{}");
 
 function eff(p){
