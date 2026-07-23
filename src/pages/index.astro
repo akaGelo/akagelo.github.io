@@ -105,6 +105,7 @@ const yearNow = new Date().getFullYear();
         data-year={p.year}
         data-fav={p.favorite ? "1" : "0"}
         data-ar={(p.img.height / p.img.width).toFixed(4)}
+        data-slug={p.slug}
         data-full={full[p.slug]}
         data-meta={`${p.dateFull} · ${p.themes.map(themeLabel).join(", ")}`}
         aria-label={`Open photo, ${p.dateFull}`}
@@ -157,6 +158,12 @@ const yearNow = new Date().getFullYear();
 
   <dialog id="lightbox" class="lightbox">
     <button class="lb-close" aria-label="Close">✕</button>
+    <button class="lb-share" aria-label="Share photo" title="Share">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 15V3"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/>
+      </svg>
+    </button>
+    <span class="lb-toast" role="status" aria-live="polite"></span>
     <button class="lb-nav lb-prev" aria-label="Previous">‹</button>
     <figure class="lb-stage">
       <img class="lb-img" alt="" />
@@ -285,7 +292,23 @@ const yearNow = new Date().getFullYear();
     opacity: 0.7; transition: opacity 0.15s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
   }
   .lb-close:hover { opacity: 1; }
-  .lb-nav:focus, .lb-nav:focus-visible, .lb-close:focus, .lb-close:focus-visible { outline: none; }
+  .lb-share {
+    position: fixed; top: 16px; right: 64px; z-index: 2; cursor: pointer;
+    width: 40px; height: 40px; border: 0; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; color: #fff; opacity: 0.7; transition: opacity 0.15s;
+    filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.5));
+  }
+  .lb-share:hover { opacity: 1; }
+  .lb-toast {
+    position: fixed; top: 22px; left: 50%; transform: translateX(-50%); z-index: 3;
+    padding: 7px 15px; border-radius: 999px; background: rgba(0, 0, 0, 0.72);
+    font-size: 0.8rem; letter-spacing: 0.02em; pointer-events: none;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .lb-toast.show { opacity: 1; }
+  .lb-nav:focus, .lb-nav:focus-visible, .lb-close:focus, .lb-close:focus-visible,
+  .lb-share:focus, .lb-share:focus-visible { outline: none; }
 
   @media (max-width: 640px) {
     .filters { position: static; }
@@ -358,7 +381,13 @@ const yearNow = new Date().getFullYear();
   const lbMeta = lb.querySelector(".lb-meta") as HTMLElement;
   const lbCount = lb.querySelector(".lb-count") as HTMLElement;
   const lbCap = lb.querySelector(".lb-cap") as HTMLElement;
+  const lbShare = lb.querySelector(".lb-share") as HTMLButtonElement;
+  const lbToast = lb.querySelector(".lb-toast") as HTMLElement;
   const setBusy = (on: boolean) => lbCap.classList.toggle("is-busy", on);
+
+  const photoUrl = (slug: string) => location.origin + location.pathname + "#" + slug;
+  const setHash = (slug: string | null) =>
+    history.replaceState(null, "", slug ? "#" + slug : location.pathname + location.search);
 
   let list: HTMLButtonElement[] = [];
   let cur = 0;
@@ -414,6 +443,7 @@ const yearNow = new Date().getFullYear();
     if (!c) return;
     lbMeta.textContent = c.dataset.meta ?? "";
     lbCount.textContent = `${cur + 1} / ${list.length}`;
+    setHash(c.dataset.slug ?? null);
     showImage(c, showThumb);
     preloadAround();
   }
@@ -434,6 +464,26 @@ const yearNow = new Date().getFullYear();
   (lb.querySelector(".lb-prev") as HTMLButtonElement).addEventListener("click", (e) => { e.stopPropagation(); go(-1); });
   (lb.querySelector(".lb-close") as HTMLButtonElement).addEventListener("click", () => lb.close());
   lb.addEventListener("click", (e) => { if (e.target === lb || (e.target as HTMLElement).classList.contains("lb-stage")) lb.close(); });
+  lb.addEventListener("close", () => setHash(null)); // Esc / backdrop / кнопка — чистим хэш
+
+  // Share: телефон — родная шторка (Telegram и пр.), десктоп — копия ссылки в буфер
+  let toastT = 0;
+  function toast(msg: string) {
+    lbToast.textContent = msg;
+    lbToast.classList.add("show");
+    clearTimeout(toastT);
+    toastT = window.setTimeout(() => lbToast.classList.remove("show"), 1600);
+  }
+  lbShare.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const c = list[cur];
+    if (!c) return;
+    const url = photoUrl(c.dataset.slug ?? "");
+    try {
+      if (navigator.share) await navigator.share({ title: document.title, text: c.dataset.meta || "", url });
+      else { await navigator.clipboard.writeText(url); toast("Link copied"); }
+    } catch { /* отмена шторки — игнор */ }
+  });
   document.addEventListener("keydown", (e) => {
     if (!lb.open) return;
     if (e.key === "ArrowRight") go(1);
@@ -457,4 +507,16 @@ const yearNow = new Date().getFullYear();
     if (im && im.complete) c.classList.add("loaded");
     else im?.addEventListener("load", () => c.classList.add("loaded"), { once: true });
   }
+
+  // Deep-link: #slug открывает лайтбокс на нужном фото (входящая ссылка / браузерная навигация)
+  const openBySlug = (slug: string) => {
+    const card = cards.find((c) => c.dataset.slug === slug);
+    if (card && !lb.open) openAt(card);
+  };
+  const hashSlug = () => decodeURIComponent(location.hash.slice(1));
+  if (location.hash) openBySlug(hashSlug());
+  window.addEventListener("popstate", () => {
+    if (location.hash) openBySlug(hashSlug());
+    else if (lb.open) lb.close();
+  });
 </script>
