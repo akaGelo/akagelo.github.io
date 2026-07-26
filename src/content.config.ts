@@ -11,6 +11,15 @@ const photos = defineCollection({
     tags: z.array(z.string()).default([]),
     favorite: z.boolean().default(false),
     rating: z.number().optional(),
+    pin: z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        board: z.string(),
+        url: z.string(),
+        pinned: z.coerce.date(),
+      })
+      .optional(),
   }),
 });
 
