@@ -20,6 +20,16 @@ const photos = defineCollection({
         pinned: z.coerce.date(),
       })
       .optional(),
+    flickr: z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        tags: z.array(z.string()),
+        groups: z.array(z.string()).default([]),
+        url: z.string(),
+        posted: z.coerce.date(),
+      })
+      .optional(),
   }),
 });
 
