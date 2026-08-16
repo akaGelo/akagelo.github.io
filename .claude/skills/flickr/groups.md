@@ -10,24 +10,28 @@
 
 | Группа | Slug | Размер | Правила / лимит | Статус |
 |---|---|---|---|---|
-| The Street Photography Community | `realstreet` | 49.2K / 1.3M | — | не вступили |
-| RAW Street Photography | `rawstreetphotography` | 48.4K / 1.8M | — | не вступили |
-| Street Photography Magazine | `streetphotograpymag` | 33.6K / 1.1M | — | не вступили |
-| Street Photography Beginners | `streetphotographybeginners` | 33.4K / 839.7K | — | не вступили |
-| worldwide street photography | `worldwidestreetphotography` | 9.5K / 245.3K | «only street photography, play fair» | не вступили |
-| Promenade....{ Street photography } | `promenade` | 2.8K / 84K | — | не вступили |
-| 扫街/Street Photography | `saojie` | 1.4K / 93K | — | не вступили |
-| :black:contrast:white: | `filternoir` | 1.2K / 52.1K | — | не вступили |
-| World-Wide Street Photography | `streetphotographyworldwide` | 974 / 37.7K | — | не вступили |
-| My Streets | `my-streets` | 802 / 26.6K | — | не вступили |
+| The Street Photography Community | `realstreet` | 49.2K / 1.3M | **1 фото/день**, «лучший стрит, упор на кэндид» | не вступили |
+| RAW Street Photography | `rawstreetphotography` | 48.4K / 1.8M | 3/день, «NO RULES — RAW», комментарии не обязательны | не вступили |
+| Street Photography Magazine | `streetphotograpymag` | 33.6K / 1.1M | 5/неделю, отбирают кадры в журнал | не вступили |
+| Street Photography Beginners | `streetphotographybeginners` | 33.4K / 839.7K | 3/день, песочница новичков — массовая, но слабая отдача | не вступили |
+| worldwide street photography | `worldwidestreetphotography` | 9.5K / 245.3K | 3/день, «высокая планка, комментируй других» (просьба, не счётчик) | не вступили |
+| Promenade....{ Street photography } | `promenade` | 2.8K / 84K | 15/неделю, «украденные моменты» | не вступили |
+| 扫街/Street Photography | `saojie` | 1.4K / 93K | 10/день, «anything is OK» | не вступили |
+| World-Wide Street Photography | `streetphotographyworldwide` | 974 / 37.7K | 20/день | не вступили |
+| My Streets | `my-streets` | 802 / 26.6K | 3/день, «важен момент, а не техника» | не вступили |
 
-Все десять живые: на момент отбора в каждой были фото за текущий день.
+Все девять живые (фото за текущий день на момент отбора) и **публичные — вступление без
+модерации**. Правила и лимиты вычитаны из описаний групп 2026-08-16.
 
-## Группы с обменом комментариями — не берём
+## Отклонённые группы
 
-Отклонено 2026-08-16: `blackandwhiteonly` (7.8K/201.7K) требовала три комментария за каждое своё
-фото. Причина отказа — ч/б в каталоге всего 74 кадра из 671, отдача не окупает ручной работы.
-Ч/б закрывает `filternoir`, там обмен не требуется.
+- `blackandwhiteonly` (7.8K/201.7K) — требует **три комментария за каждое своё фото**. Ч/б в
+  каталоге всего 74 кадра из 671, отдача не окупает ручной работы.
+- `filternoir` (1.2K/52.1K) — «immaculate black and white contrast, no multi-tonal photos»,
+  то есть только жёсткий графичный ч/б. Мягкая тональность (туман, серость) там снимается
+  модератором.
+
+Отдельной группы под ч/б теперь нет — ч/б кадры идут в общие стрит-группы.
 
 Если в будущем такая группа всё же понадобится: комментарии пишет агент, но **не шаблонные** —
 смотреть кадр и писать по существу (свет, момент, композиция), иначе сообщество считывает
