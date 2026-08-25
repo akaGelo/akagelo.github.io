@@ -11,3 +11,25 @@ pin:
   board: "Candid Street Photography"
   url: "https://ru.pinterest.com/pin/807833251959635336/"
   pinned: 2026-07-26
+flickr:
+  title: "Strong and Independent"
+  description: |-
+    Summer afternoon on the Kazanka embankment, Kazan, Russia.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc00786
+  tags:
+    - street photography
+    - candid
+    - documentary
+    - kazan
+    - russia
+    - tatarstan
+    - embankment
+    - summer
+    - city life
+    - people watching
+    - urban
+    - street
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55486617167/"
+  posted: 2026-08-25

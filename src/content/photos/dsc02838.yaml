@@ -11,3 +11,26 @@ pin:
   board: "Candid Street Photography"
   url: "https://ru.pinterest.com/pin/807833251959961473/"
   pinned: 2026-08-14
+flickr:
+  title: "The Ice Cream Never Melts"
+  description: |-
+    Summer square in Mtskheta, the ancient capital near Tbilisi. June 2026.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc02838
+  tags:
+    - street photography
+    - candid
+    - documentary
+    - mtskheta
+    - georgia
+    - caucasus
+    - tbilisi
+    - summer
+    - square
+    - ice cream
+    - smartphones
+    - tiled roofs
+    - street
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55487634843/"
+  posted: 2026-08-24

@@ -12,3 +12,27 @@ pin:
   board: "Black and White Street Photography"
   url: "https://ru.pinterest.com/pin/807833251959673245/"
   pinned: 2026-07-28
+flickr:
+  title: "Sunday Market"
+  description: |-
+    Flea market by the old brick houses, Vladimir, Russia.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc04822
+  tags:
+    - street photography
+    - candid
+    - documentary
+    - vladimir
+    - russia
+    - golden ring
+    - flea market
+    - market
+    - vendors
+    - black and white
+    - monochrome
+    - small town
+    - province
+    - street
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55487602881/"
+  posted: 2026-08-25

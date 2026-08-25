@@ -13,3 +13,25 @@ pin:
   board: "Street Portraits"
   url: "https://ru.pinterest.com/pin/807833251959798624/"
   pinned: 2026-08-04
+flickr:
+  title: "The Engineer's Watch"
+  description: |-
+    Train engineer of the Ruskeala Express, Sortavala, Karelia, Russia.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc06660
+  tags:
+    - street portrait
+    - documentary
+    - candid
+    - sortavala
+    - karelia
+    - russia
+    - steam train
+    - ruskeala express
+    - railway
+    - engineer
+    - winter
+    - portrait
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55487876659/"
+  posted: 2026-08-25

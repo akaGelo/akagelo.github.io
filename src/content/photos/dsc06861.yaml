@@ -11,3 +11,25 @@ pin:
   board: "Travel Photography — Landscapes & Nature"
   url: "https://ru.pinterest.com/pin/807833251959711578/"
   pinned: 2026-07-30
+flickr:
+  title: "Marble Mirror"
+  description: |-
+    Flooded marble quarry, Ruskeala Mountain Park, Karelia, Russia.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc06861
+  tags:
+    - landscape photography
+    - travel photography
+    - ruskeala
+    - karelia
+    - russia
+    - marble
+    - quarry
+    - lake
+    - reflection
+    - cliffs
+    - nature
+    - landscape
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55487702731/"
+  posted: 2026-08-25

@@ -12,3 +12,27 @@ pin:
   board: "Street Portraits"
   url: "https://ru.pinterest.com/pin/807833251959962430/"
   pinned: 2026-08-14
+flickr:
+  title: "Parking Spot"
+  description: |-
+    Father and son in the old town, a toy car parked on dad's head. Tbilisi, June 2026.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc01593
+  tags:
+    - street photography
+    - candid
+    - documentary
+    - street portrait
+    - tbilisi
+    - georgia
+    - caucasus
+    - father and son
+    - toy car
+    - old town
+    - cafe
+    - summer
+    - family
+    - street
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55486535402/"
+  posted: 2026-08-24

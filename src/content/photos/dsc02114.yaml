@@ -14,3 +14,26 @@ pin:
   board: "Street Portraits"
   url: "https://ru.pinterest.com/pin/807833251959664175/"
   pinned: 2026-07-28
+flickr:
+  title: "The Sign"
+  description: |-
+    Altar boys by the 16th century church, Gremi, Kakheti, Georgia.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc02114
+  tags:
+    - street portrait
+    - candid
+    - documentary
+    - gremi
+    - kakheti
+    - georgia
+    - caucasus
+    - church
+    - orthodox
+    - altar boys
+    - red robes
+    - brick
+    - portrait
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55487765408/"
+  posted: 2026-08-25
