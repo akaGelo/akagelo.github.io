@@ -1,4 +1,4 @@
-title: ""
+title: "At Work"
 image: dsc00238.jpg
 src: "2026/DSC00238.jpg"
 date: 2026-06-20
@@ -7,3 +7,21 @@ tags:
   - portrait
   - architecture
 favorite: true
+
+pin:
+  title: "At Work — a Candid Street Scene in Vladikavkaz, Russia"
+  description: "Candid street photography from Vladikavkaz, Russia. Gardener trimming hedges at dawn, old building facade, everyday city life, urban gardening."
+  board: "Street Portraits"
+  url: "https://ru.pinterest.com/pin/807833251960512994/"
+  pinned: 2026-09-14
+
+flickr:
+  title: "At Work"
+  description: |-
+    A gardener trimming the hedges in early morning light, an old building behind him. Vladikavkaz, June 2026.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc00238
+  tags: [street photography, candid, vladikavkaz, russia, gardener, hedge, morning, architecture, urban life, documentary, summer, work]
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55523472563/"
+  posted: 2026-09-12
