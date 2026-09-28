@@ -1,4 +1,4 @@
-title: ""
+title: "Supporting Role"
 image: dsc04238.jpg
 src: "2024/DSC04238.jpg"
 date: 2024-03-03
@@ -7,3 +7,21 @@ tags:
   - architecture
 favorite: true
 rating: 5
+
+pin:
+  title: "Supporting Role — a Street Portrait in Moscow, Russia"
+  description: "Street portrait photography from Moscow, Russia. Young woman with curly hair and red lipstick leaning on a column, friend watching from the shadows, warm late afternoon light, concrete columns, urban architecture."
+  board: "Street Portraits"
+  url: "https://ru.pinterest.com/pin/807833251960769770/"
+  pinned: 2026-09-28
+
+flickr:
+  title: "Supporting Role"
+  description: |-
+    Two friends between concrete columns: one in the warm light, the other waiting in the shadow. Moscow, March 2024.
+
+    https://vyukov.ru/?utm_source=flickr&utm_medium=photo#dsc04238
+  tags: [street portrait, street photography, portrait, moscow, russia, columns, architecture, curly hair, red lipstick, friends, warm light, spring, telephoto]
+  groups: []
+  url: "https://www.flickr.com/photos/akagelo/55557223281/"
+  posted: 2026-09-28
